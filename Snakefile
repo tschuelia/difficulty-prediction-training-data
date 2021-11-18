@@ -22,18 +22,22 @@ print(msas)
 
 outdir = config["outdir"]
 output_files_dir = outdir + "{msa}/output_files/"
-raxmlng_tree_inference_dir = output_files_dir + "raxmlng/inference/"
+
+# File paths for RAxML-NG files
+output_files_raxmlng_dir = output_files_dir + "raxmlng/"
+# tree inference
+raxmlng_tree_inference_dir = output_files_raxmlng_dir + "inference/"
 raxmlng_tree_inference_prefix_pars = raxmlng_tree_inference_dir + "pars_{seed}"
 raxmlng_tree_inference_prefix_rand = raxmlng_tree_inference_dir + "rand_{seed}"
-
-raxmlng_tree_eval_dir = output_files_dir + "raxmlng/evaluation/"
+# tree evaluation
+raxmlng_tree_eval_dir = output_files_raxmlng_dir + "evaluation/"
 raxmlng_tree_eval_prefix_pars = raxmlng_tree_eval_dir + "pars_{seed}"
 raxmlng_tree_eval_prefix_rand = raxmlng_tree_eval_dir + "rand_{seed}"
 
 rule all:
     input:
-        raxmlng_pars_search_trees = expand(raxmlng_tree_inference_prefix_pars + ".raxml.bestTree", msa=msa_names, seed=pars_seeds),
-        raxmlng_rand_search_trees = expand(raxmlng_tree_inference_prefix_rand + ".raxml.bestTree", msa=msa_names, seed=pars_seeds)
+        expand(f"{output_files_raxmlng_dir}AllSearchTrees.trees", msa=msa_names)
 
 
 include: "rules/raxmlng_tree_inference.smk"
+include: "rules/collect_data.smk"

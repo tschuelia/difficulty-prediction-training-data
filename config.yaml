@@ -1,0 +1,28 @@
+# Provide a list of paths to MSA files for which you wish to generate training data
+msa_paths:
+  [
+    "/Users/julia/Desktop/Masterarbeit/Datasets/BioinfProtocols/dataset/027.phy"
+  ]
+
+# After running the pipeline, the outdir will contain a subdirectory for each given MSA
+# each subdirectory contains:
+# - a directory called "output_files": contains all RAxML-NG and IQ-Tree log files
+# - an .sqlite3 database file containing all information, see README.md for database schema
+
+outdir: "data/"
+
+# provide the paths to the RAxML-NG and IQ-Tree executables here
+software:
+  raxml-ng:
+    command: "/Users/julia/Desktop/Masterarbeit/MasterThesis/snakemake/software/param-raxml-ng/bin/raxml-ng"
+    model: GTR+G
+    threads: 2
+  iqtree:
+    command: path/to/iqtree
+    model: GTR+FO+G4
+    threads: 2
+
+# these variables are used for coding and debugging, we do not recommend changing them
+_debug:
+  _num_pars_trees: 1
+  _num_rand_trees: 1

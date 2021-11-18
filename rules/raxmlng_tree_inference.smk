@@ -2,6 +2,9 @@ model = config["software"]["raxml-ng"]["model"]
 threads = config["software"]["raxml-ng"]["threads"]
 
 rule raxmlng_pars_tree:
+    """
+    Rule that infers a single tree based on a parsimony starting tree using RAxML-NG.
+    """
     output:
         raxml_best_tree     = f"{raxmlng_tree_inference_prefix_pars}.raxml.bestTree",
         raxml_best_model    = f"{raxmlng_tree_inference_prefix_pars}.raxml.bestModel",
@@ -23,6 +26,9 @@ rule raxmlng_pars_tree:
 
 
 rule raxmlng_rand_tree:
+    """
+    Rule that infers a single tree based on a random starting tree using RAxML-NG.
+    """
     output:
         raxml_best_tree     = f"{raxmlng_tree_inference_prefix_rand}.raxml.bestTree",
         raxml_best_model    = f"{raxmlng_tree_inference_prefix_rand}.raxml.bestModel",

@@ -36,8 +36,9 @@ raxmlng_tree_eval_prefix_rand = raxmlng_tree_eval_dir + "rand_{seed}"
 
 rule all:
     input:
-        expand(f"{output_files_raxmlng_dir}AllSearchTrees.trees", msa=msa_names)
+        expand(f"{raxmlng_tree_inference_dir}inference.raxml.rfDistances", msa=msa_names)
 
 
 include: "rules/raxmlng_tree_inference.smk"
 include: "rules/collect_data.smk"
+include: "rules/raxmlng_rfdistance.smk"

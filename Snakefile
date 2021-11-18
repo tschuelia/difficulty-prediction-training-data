@@ -15,10 +15,8 @@ msa_paths = config["msa_paths"]
 
 # This assumes, that each msa
 msa_names = [os.path.split(pth)[1] for pth in msa_paths]
-print(msa_names)
 
 msas = dict(zip(msa_names, msa_paths))
-print(msas)
 
 outdir = config["outdir"]
 output_files_dir = outdir + "{msa}/output_files/"
@@ -36,9 +34,11 @@ raxmlng_tree_eval_prefix_rand = raxmlng_tree_eval_dir + "rand_{seed}"
 
 rule all:
     input:
-        expand(f"{raxmlng_tree_inference_dir}inference.raxml.rfDistances", msa=msa_names)
+        expand(f"{raxmlng_tree_inference_dir}inference.raxml.rfDistances", msa=msa_names),
+        expand(f"{raxmlng_tree_eval_dir}eval.raxml.rfDistances", msa=msa_names)
 
 
 include: "rules/raxmlng_tree_inference.smk"
+include: "rules/raxmlng_tree_evaluation.smk"
 include: "rules/collect_data.smk"
 include: "rules/raxmlng_rfdistance.smk"

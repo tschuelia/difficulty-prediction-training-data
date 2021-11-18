@@ -3,6 +3,7 @@ import os
 configfile: "config.yaml"
 
 raxmlng_command = config["software"]["raxml-ng"]["command"]
+iqtree_command = config["software"]["iqtree"]["command"]
 
 num_pars_trees = config["_debug"]["_num_pars_trees"]
 num_rand_trees  = config["_debug"]["_num_rand_trees"]
@@ -32,13 +33,17 @@ raxmlng_tree_eval_dir = output_files_raxmlng_dir + "evaluation/"
 raxmlng_tree_eval_prefix_pars = raxmlng_tree_eval_dir + "pars_{seed}"
 raxmlng_tree_eval_prefix_rand = raxmlng_tree_eval_dir + "rand_{seed}"
 
+# File paths for IQ-Tree files
+output_files_iqtree_dir = output_files_dir + "iqtree/"
+
 rule all:
     input:
         expand(f"{raxmlng_tree_inference_dir}inference.raxml.rfDistances", msa=msa_names),
-        expand(f"{raxmlng_tree_eval_dir}eval.raxml.rfDistances", msa=msa_names)
+        expand(f"{output_files_iqtree_dir}significance.iqtree", msa=msa_names)
 
 
 include: "rules/raxmlng_tree_inference.smk"
 include: "rules/raxmlng_tree_evaluation.smk"
 include: "rules/collect_data.smk"
 include: "rules/raxmlng_rfdistance.smk"
+include: "rules/iqtree_significance_tests.smk"

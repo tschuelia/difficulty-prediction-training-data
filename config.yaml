@@ -1,14 +1,19 @@
 # Provide a list of paths to MSA files for which you wish to generate training data
+# currently all MSAs will be run under the same model, so make sure to only provide either
+# DNA or AA data and not both
 msa_paths:
   [
-    "/Users/julia/Desktop/Masterarbeit/Datasets/BioinfProtocols/dataset/027.phy"
+    "/Users/julia/Desktop/Masterarbeit/Datasets/BioinfProtocols/dataset/027.phy",
+    "/Users/julia/Desktop/Masterarbeit/Datasets/test-Datasets/DNA-Data/101/101.phy"
   ]
+
+# either DNA or AA
+data_type: "DNA"
 
 # After running the pipeline, the outdir will contain a subdirectory for each given MSA
 # each subdirectory contains:
 # - a directory called "output_files": contains all RAxML-NG and IQ-Tree log files
 # - an .sqlite3 database file containing all information, see README.md for database schema
-
 outdir: "data/"
 
 # provide the paths to the RAxML-NG and IQ-Tree executables here
@@ -18,7 +23,7 @@ software:
     model: GTR+G
     threads: 2
   iqtree:
-    command: path/to/iqtree
+    command: "/Users/julia/miniconda3/envs/bioinfo/bin/iqtree"
     model: GTR+FO+G4
     threads: 2
 

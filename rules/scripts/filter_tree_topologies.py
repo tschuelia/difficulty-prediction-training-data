@@ -1,6 +1,6 @@
 import pickle
 
-from raxml_parser import get_raxml_num_unique_topos, read_rfdistances
+from raxml_parser import get_raxmlng_num_unique_topos, read_rfdistances
 
 def get_rfdist_clusters(rfdistances, trees):
     # instead of indexing via the eval_tree.id
@@ -58,7 +58,7 @@ rfdists_file = snakemake.input.eval_trees_rfdistances
 num_trees = len(eval_trees)
 
 if num_trees > 1:
-    num_topos = get_raxml_num_unique_topos(log_file)
+    num_topos = get_raxmlng_num_unique_topos(log_file)
     abs_pairwise, _ = read_rfdistances(rfdists_file)
 
     if num_topos == 1:

@@ -38,8 +38,7 @@ output_files_iqtree_dir = output_files_dir + "iqtree/"
 
 rule all:
     input:
-        expand(f"{raxmlng_tree_inference_dir}inference.raxml.rfDistances", msa=msa_names),
-        expand(f"{output_files_iqtree_dir}significance.iqtree", msa=msa_names)
+        expand(f"{output_files_dir}data.sqlite3", msa=msa_names)
 
 
 include: "rules/raxmlng_tree_inference.smk"
@@ -47,3 +46,5 @@ include: "rules/raxmlng_tree_evaluation.smk"
 include: "rules/collect_data.smk"
 include: "rules/raxmlng_rfdistance.smk"
 include: "rules/iqtree_significance_tests.smk"
+include: "rules/msa_features.smk"
+include: "rules/save_data.smk"

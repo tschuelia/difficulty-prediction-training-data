@@ -3,17 +3,17 @@ import regex
 from utils import get_single_value_from_file, get_multiple_values_from_file, read_file_contents
 
 
-def get_raxml_abs_rf_distance(log_file):
+def get_raxmlng_abs_rf_distance(log_file):
     STR = "Average absolute RF distance in this tree set:"
     return get_single_value_from_file(log_file, STR)
 
 
-def get_raxml_rel_rf_distance(log_file):
+def get_raxmlng_rel_rf_distance(log_file):
     STR = "Average relative RF distance in this tree set:"
     return get_single_value_from_file(log_file, STR)
 
 
-def get_raxml_num_unique_topos(log_file):
+def get_raxmlng_num_unique_topos(log_file):
     STR = "Number of unique topologies in this tree set:"
     return get_single_value_from_file(log_file, STR)
 
@@ -39,20 +39,23 @@ def read_rfdistances(rfdistances_file_path):
     return abs_res, rel_res
 
 
-def get_all_raxml_llhs(raxml_file):
+def get_raxmlng_llh(raxmlng_file):
     STR = "Final LogLikelihood:"
-    return get_multiple_values_from_file(raxml_file, STR)
+    return get_single_value_from_file(raxmlng_file, STR)
 
 
-def get_best_raxml_llh(raxml_file):
-    all_llhs = get_all_raxml_llhs(raxml_file)
+def get_all_raxmlng_llhs(raxmlng_file):
+    STR = "Final LogLikelihood:"
+    return get_multiple_values_from_file(raxmlng_file, STR)
+
+
+def get_best_raxmlng_llh(raxmlng_file):
+    all_llhs = get_all_raxmlng_llhs(raxmlng_file)
     return max(all_llhs)
 
 
-def get_raxml_elapsed_time(log_file):
+def get_raxmlng_elapsed_time(log_file):
     content = read_file_contents(log_file)
-
-    all_times = []
 
     for line in content:
         if "Elapsed time:" not in line:
@@ -63,17 +66,14 @@ def get_raxml_elapsed_time(log_file):
             # line looks like this: "Elapsed time: 5562.869 seconds (this run) / 91413.668 seconds (total with restarts)"
             _, right = line.split("/")
             value = right.split(" ")[1]
-            all_times.append(float(value))
+            return float(value)
 
         # ...or the run ran in one sitting...
         else:
             # line looks like this: "Elapsed time: 63514.086 seconds"
             value = line.split(" ")[2]
-            all_times.append(float(value))
+            return float(value)
 
-    if not all_times:
-        raise ValueError(
-            f"The given input file {log_file} does not contain the elapsed time."
-        )
-
-    return all_times
+    raise ValueError(
+        f"The given input file {log_file} does not contain the elapsed time."
+    )

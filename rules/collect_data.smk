@@ -63,3 +63,17 @@ rule save_best_eval_tree:
         best_eval_tree = f"{raxmlng_tree_eval_dir}BestEvalTree.tree"
     script:
         "scripts/save_best_eval_tree.py"
+
+
+rule collect_plausible_trees:
+    """
+    Rule that collects all plausible trees for one dataset in one file.
+    """
+    input:
+        iqtree_results = f"{output_files_iqtree_dir}significance.iqtree",
+        clusters = f"{output_files_iqtree_dir}filteredEvalTrees.clusters.pkl",
+        eval_trees = f"{raxmlng_tree_eval_dir}AllEvalTrees.trees",
+    output:
+        all_plausible_trees = f"{raxmlng_tree_eval_dir}AllPlausibleTrees.trees",
+    script:
+        "scripts/collect_plausible_trees.py"

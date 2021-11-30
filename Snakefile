@@ -20,6 +20,7 @@ msa_names = [os.path.split(pth)[1] for pth in msa_paths]
 msas = dict(zip(msa_names, msa_paths))
 
 outdir = config["outdir"]
+db_path = outdir + "{msa}/"
 output_files_dir = outdir + "{msa}/output_files/"
 
 # File paths for RAxML-NG files
@@ -38,7 +39,7 @@ output_files_iqtree_dir = output_files_dir + "iqtree/"
 
 rule all:
     input:
-        expand(f"{output_files_dir}data.sqlite3", msa=msa_names)
+        expand(f"{db_path}data.sqlite3", msa=msa_names)
 
 
 include: "rules/raxmlng_tree_inference.smk"

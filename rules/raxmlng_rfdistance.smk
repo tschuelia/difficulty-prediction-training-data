@@ -39,3 +39,25 @@ rule raxmlng_rfdistance_eval_trees:
         "--prefix {params.prefix} "
         ">> {output.rfDist_log} "
 
+
+rule raxmlng_rfdistance_plausible_trees:
+    """
+    Rule that computes the RF-Distances between all plausible trees using RAxML-NG.
+    """
+    input:
+        all_plausible_trees = rules.collect_plausible_trees.output.all_plausible_trees
+    output:
+        rfDist      = f"{raxmlng_tree_eval_dir}plausible.raxml.rfDistances",
+        rfDist_log  = f"{raxmlng_tree_eval_dir}plausible.raxml.rfDistances.log",
+    params:
+        prefix = f"{raxmlng_tree_eval_dir}plausible"
+    log:
+        f"{raxmlng_tree_eval_dir}plausible.raxml.rfDistances.snakelog",
+    shell:
+        "{raxmlng_command} "
+        "--rfdist "
+        "--tree {input.all_plausible_trees} "
+        "--prefix {params.prefix} "
+        ">> {output.rfDist_log} "
+
+

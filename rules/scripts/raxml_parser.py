@@ -1,4 +1,6 @@
 import regex
+from tempfile import TemporaryDirectory
+import subprocess
 
 from utils import get_single_value_from_file, get_multiple_values_from_file, read_file_contents
 
@@ -44,6 +46,19 @@ def get_raxmlng_llh(raxmlng_file):
     return get_single_value_from_file(raxmlng_file, STR)
 
 
+def get_raxmlng_starting_llh(raxmlng_file):
+    content = read_file_contents(raxmlng_file)
+    for line in content:
+        if "Initial branch length optimization" not in line:
+            continue
+        # [00:00:00 -8735.928562] Initial branch length optimization
+        numbers, _ = line.split("]")
+        _, llh = numbers.split(" ")
+        return float(llh)
+
+    raise ValueError("The given file does not contain the starting llh")
+
+
 def get_all_raxmlng_llhs(raxmlng_file):
     STR = "Final LogLikelihood:"
     return get_multiple_values_from_file(raxmlng_file, STR)
@@ -77,3 +92,76 @@ def get_raxmlng_elapsed_time(log_file):
     raise ValueError(
         f"The given input file {log_file} does not contain the elapsed time."
     )
+
+
+def get_raxmlng_num_spr_rounds(log_file):
+    slow_regex = regex.compile("SLOW\s+spr\s+round\s+(\d+)")
+    fast_regex = regex.compile("FAST\s+spr\s+round\s+(\d+)")
+
+    content = read_file_contents(log_file)
+
+    slow = 0
+    fast = 0
+
+    for line in content:
+        if "SLOW spr round" in line:
+            m = regex.search(slow_regex, line)
+            if m:
+                slow_round = int(m.groups()[0])
+                slow = max(slow, slow_round)
+        if "FAST spr round" in line:
+            m = regex.search(fast_regex, line)
+            if m:
+                fast_round = int(m.groups()[0])
+                fast = max(fast, fast_round)
+
+    return slow, fast
+
+
+def rel_rfdistance_starting_final(newick_starting, newick_final, raxmlng_executable="raxml-ng"):
+    with TemporaryDirectory() as tmpdir:
+        trees = tmpdir + ".trees"
+        with open(trees, "w") as f:
+            f.write(newick_starting.strip() + "\n" + newick_final.strip())
+
+        cmd = [
+            raxmlng_executable,
+            "--rfdist",
+            trees,
+            "--prefix",
+            tmpdir
+        ]
+
+        subprocess.check_output(cmd)
+
+        log_file = tmpdir + ".raxml.log"
+
+        return get_raxmlng_rel_rf_distance(log_file)
+
+
+def get_model_parameter_estimates(raxmlng_file):
+    """
+    For now just store everyting as string, different models result in different strings
+    and I don't want to commit to parsing just yet
+    TODO: adapt this for multiple partitions, in this case return a dict instead of a string with the partition name as key and the corresponding string as value
+    """
+    content = read_file_contents(raxmlng_file)
+
+    rate_het = None
+    base_freq = None
+    subst_rates = None
+
+    for line in content:
+        if line.startswith("Rate heterogeneity"):
+            _, res = line.split(":", 1)
+            rate_het = res.strip()
+        if line.startswith("Base frequencies"):
+            _, res = line.split(":", 1)
+            base_freq = res.strip()
+        if line.startswith("Substitution rates"):
+            _, res = line.split(":", 1)
+            subst_rates = res.strip()
+
+    return rate_het, base_freq, subst_rates
+
+

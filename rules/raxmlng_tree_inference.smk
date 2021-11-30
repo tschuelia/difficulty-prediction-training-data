@@ -7,6 +7,7 @@ rule raxmlng_pars_tree:
     """
     output:
         raxml_best_tree     = f"{raxmlng_tree_inference_prefix_pars}.raxml.bestTree",
+        raxml_starting_tree = f"{raxmlng_tree_inference_prefix_pars}.raxml.startTree",
         raxml_best_model    = f"{raxmlng_tree_inference_prefix_pars}.raxml.bestModel",
         raxml_log           = f"{raxmlng_tree_inference_prefix_pars}.raxml.inference.log",
     params:

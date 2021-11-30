@@ -31,12 +31,11 @@ class Dataset(P.Model):
     # Single inference features
     num_slow_spr_rounds = P.IntegerField(null=True)
     num_fast_spr_rounds = P.IntegerField(null=True)
-    parsimony_score_starting_tree = P.FloatField(null=True)
-    parsimony_score_final_tree = P.FloatField(null=True)
     llh_starting_tree = P.FloatField(null=True)
     llh_final_tree = P.FloatField(null=True)
     rfdistance_starting_final = P.FloatField(null=True)
     llh_difference_starting_final = P.FloatField(null=True)
+    rate_heterogeneity_final = JSONField(null=True)
     eq_frequencies_final = JSONField(null=True)
     substitution_rates_final = JSONField(null=True)
     average_branch_length_final = P.FloatField(null=True)

@@ -2,6 +2,7 @@ rule save_data:
     input:
         # Tree seach tree files and logs
         pars_search_trees   = expand(raxmlng_tree_inference_prefix_pars + ".raxml.bestTree",seed=pars_seeds,allow_missing=True),
+        pars_starting_trees = expand(raxmlng_tree_inference_prefix_pars + ".raxml.startTree",seed=pars_seeds,allow_missing=True),
         pars_search_logs    = expand(raxmlng_tree_inference_prefix_pars + ".raxml.inference.log",seed=pars_seeds,allow_missing=True),
         rand_search_trees   = expand(raxmlng_tree_inference_prefix_rand + ".raxml.bestTree", seed=rand_seeds, allow_missing=True),
         rand_search_logs    = expand(raxmlng_tree_inference_prefix_rand + ".raxml.inference.log",seed=rand_seeds,allow_missing=True),
@@ -21,7 +22,8 @@ rule save_data:
         eval_rfdistance = f"{raxmlng_tree_eval_dir}eval.raxml.rfDistances.log",
 
         # Plausible tree RFDistance logs
-        # TODO: berechnen
+        plausible_rfdistance = f"{raxmlng_tree_eval_dir}plausible.raxml.rfDistances.log",
+        plausible_trees_collected = f"{raxmlng_tree_eval_dir}AllPlausibleTrees.trees",
 
         # IQ-Tree significance test results and clusters
         iqtree_results  = f"{output_files_iqtree_dir}significance.iqtree",
@@ -30,6 +32,9 @@ rule save_data:
         # MSA Features
         msa_features = f"{output_files_dir}msa_features.json",
     output:
-        database = f"{output_files_dir}data.sqlite3"
+        database = f"{db_path}data.sqlite3"
+
+    params:
+        raxmlng_command = raxmlng_command
     script:
         "scripts/save_data.py"

@@ -1,6 +1,7 @@
 # Provide a list of paths to MSA files for which you wish to generate training data
 # currently all MSAs will be run under the same model, so make sure to only provide either
 # DNA or AA data and not both
+# note that at the moment this pipeline does not support partitioned analyses
 msa_paths:
   [
     "/Users/julia/Desktop/Masterarbeit/Datasets/BioinfProtocols/dataset/027.phy",

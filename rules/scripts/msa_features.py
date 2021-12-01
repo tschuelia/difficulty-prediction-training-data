@@ -31,6 +31,18 @@ def _convert_dna_msa_to_biopython_format(msa_file, tmpfile):
     tmpfile.write(repl)
 
 
+def _convert_aa_msa_to_biopython_format(msa_file, tmpfile):
+    """
+    The unknonwn char in AA MSA files for Biopython to work
+    All "?" are gaps -> convert to "-"
+    """
+    with open(msa_file) as f:
+        repl = f.read().replace("?", "-")
+        repl = repl.upper()
+
+    tmpfile.write(repl)
+
+
 def _get_msa_file_format(msa_file):
     """
     For now: only support .fasta and .phy files
@@ -50,7 +62,9 @@ def read_alignment(msa_file, data_type="DNA"):
             _convert_dna_msa_to_biopython_format(msa_file, tmpfile)
             return AlignIO.read(tmpfile.name, format=_get_msa_file_format(msa_file))
     else:
-        return AlignIO.read(msa_file, format=_get_msa_file_format(msa_file))
+        with NamedTemporaryFile(mode="w") as tmpfile:
+            _convert_aa_msa_to_biopython_format(msa_file, tmpfile)
+            return AlignIO.read(msa_file, format=_get_msa_file_format(msa_file))
 
 
 def get_number_of_taxa(msa):
@@ -118,7 +132,7 @@ def bollback_multinomial(msa):
     return mult
 
 
-def _get_distance_matrix(msa, num_samples):
+def _get_distance_matrix(msa, num_samples, data_type):
     """
     For large MSAs (i.e. more than num_samples taxa), computing the distance matrix
     is computationally very expensive.
@@ -129,19 +143,20 @@ def _get_distance_matrix(msa, num_samples):
         selection = sorted(random.sample(sample_population, num_samples))
         msa = MultipleSeqAlignment([msa[el] for el in selection])
 
-    calculator = DistanceCalculator(model="blastn")
+    model = "blastn" if data_type == "DNA" else "blosum62"
+    calculator = DistanceCalculator(model=model)
     dm = calculator.get_distance(msa)
     return dm
 
 
-def treelikeness_score(msa):
+def treelikeness_score(msa, data_type):
     """
     Compute the treelikeness score according to
     δ Plots: A Tool for Analyzing Phylogenetic Distance Data, Holland, Huber, Dress and Moulton (2002)
     https://doi.org/10.1093/oxfordjournals.molbev.a004030
     """
     num_samples = min(get_number_of_taxa(msa), 100)
-    dm = _get_distance_matrix(msa, num_samples)
+    dm = _get_distance_matrix(msa, num_samples, data_type)
 
     options = list(range(len(dm)))
 

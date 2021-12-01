@@ -17,9 +17,9 @@ msa_features = {
     "entropy": get_msa_avg_entropy(msa),
     "column_entropies": get_msa_column_entropies(msa),
     "bollback": bollback_multinomial(msa),
-    "treelikeness": treelikeness_score(msa),
+    "treelikeness": treelikeness_score(msa, data_type),
     "char_frequencies": get_character_frequencies(msa)
 }
 
 with open(snakemake.output.msa_features, "w") as f:
-    json.dump(msa_features, f)
+    json.dump(msa_features, f)n

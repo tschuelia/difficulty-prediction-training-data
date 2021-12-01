@@ -2,14 +2,13 @@
 # currently all MSAs will be run under the same model, so make sure to only provide either
 # DNA or AA data and not both
 # note that at the moment this pipeline does not support partitioned analyses
-msa_paths:
-  [
-    "/Users/julia/Desktop/Masterarbeit/Datasets/BioinfProtocols/dataset/027.phy",
-    "/Users/julia/Desktop/Masterarbeit/Datasets/test-Datasets/DNA-Data/101/101.phy"
-  ]
+msa_paths: [
+   /insert/paths/here,
+]
+
 
 # either DNA or AA
-data_type: "DNA"
+data_type: "AA"
 
 # After running the pipeline, the outdir will contain a subdirectory for each given MSA
 # each subdirectory contains:
@@ -20,15 +19,17 @@ outdir: "data/"
 # provide the paths to the RAxML-NG and IQ-Tree executables here
 software:
   raxml-ng:
-    command: "/Users/julia/Desktop/Masterarbeit/MasterThesis/snakemake/software/param-raxml-ng/bin/raxml-ng"
-    model: GTR+G
+    command: "path/to/raxml-ng"
+    #model: GTR+G
+    model: PROTGTR+G
     threads: 2
   iqtree:
-    command: "/Users/julia/miniconda3/envs/bioinfo/bin/iqtree"
-    model: GTR+FO+G4
+    command: "path/to/iqtree"
+    model: WAG+FO+G4
+    #model: GTR+FO+G4
     threads: 2
 
 # these variables are used for coding and debugging, we do not recommend changing them
 _debug:
-  _num_pars_trees: 1
-  _num_rand_trees: 1
+  _num_pars_trees: 50
+  _num_rand_trees: 50

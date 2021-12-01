@@ -1,6 +1,3 @@
-model = config["software"]["iqtree"]["model"]
-threads = config["software"]["iqtree"]["threads"]
-
 rule iqtree_filter_unique_tree_topologies:
     """
     The statistical tests can be biased by the number of trees in the candidate set. 
@@ -35,13 +32,15 @@ rule iqtree_significance_tests_on_eval_trees:
         iqtree_log  = f"{output_files_iqtree_dir}significance.iqtree.log",
     params:
         msa     = lambda wildcards: msas[wildcards.msa],
-        prefix  = f"{output_files_iqtree_dir}significance"
+        prefix  = f"{output_files_iqtree_dir}significance",
+        model   = config["software"]["iqtree"]["model"],
+        threads = config["software"]["iqtree"]["threads"]
     log:
         f"{output_files_iqtree_dir}significance.iqtree.snakelog",
     shell:
         "{iqtree_command} "
         "-s {params.msa} "
-        "-m {model} "
+        "-m {params.model} "
         "-pre {params.prefix} "
         "-z {input.filtered_trees} "
         "-te {input.best_tree} "
@@ -49,6 +48,6 @@ rule iqtree_significance_tests_on_eval_trees:
         "-zb 10000 "
         "-zw "
         "-au "
-        "-nt {threads} "
+        "-nt {params.threads} "
         "-seed 0 "
         "> {output.iqtree_log} "

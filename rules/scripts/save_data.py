@@ -36,6 +36,7 @@ db.create_tables(
 )
 dataset_name = snakemake.wildcards.msa
 raxmlng_command = snakemake.params.raxmlng_command
+data_type = snakemake.params.data_type
 
 # tree search
 pars_search_trees = snakemake.input.pars_search_trees
@@ -86,6 +87,7 @@ rate_het, base_freq, subst_rates = get_model_parameter_estimates(single_tree_log
 dataset_dbobj = Dataset.create(
     uuid        = uuid.uuid4().hex,
     verbose_name= dataset_name,
+    data_type = data_type,
 
     # Label features
     num_searches=num_searches,

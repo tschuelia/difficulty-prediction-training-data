@@ -7,6 +7,7 @@ db = P.SqliteDatabase(None)
 class Dataset(P.Model):
     uuid = P.UUIDField()
     verbose_name = P.TextField(null=True)
+    data_type = P.TextField(null=True)
 
     # Label features
     num_searches = P.IntegerField(null=True)

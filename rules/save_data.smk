@@ -35,6 +35,7 @@ rule save_data:
         database = f"{db_path}data.sqlite3"
 
     params:
-        raxmlng_command = raxmlng_command
+        raxmlng_command = raxmlng_command,
+        data_type = data_type
     script:
         "scripts/save_data.py"

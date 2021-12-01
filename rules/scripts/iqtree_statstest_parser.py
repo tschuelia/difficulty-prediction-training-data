@@ -131,6 +131,7 @@ def _get_cleaned_table_entries(
 def _get_default_entry():
     return {
                 "deltaL": 0,
+                "plausible": 1,
                 "tests": {
                     'bp-RELL': {
                         'score': 1,

@@ -22,4 +22,4 @@ msa_features = {
 }
 
 with open(snakemake.output.msa_features, "w") as f:
-    json.dump(msa_features, f)n
+    json.dump(msa_features, f)

@@ -64,7 +64,7 @@ def read_alignment(msa_file, data_type="DNA"):
     else:
         with NamedTemporaryFile(mode="w") as tmpfile:
             _convert_aa_msa_to_biopython_format(msa_file, tmpfile)
-            return AlignIO.read(msa_file, format=_get_msa_file_format(msa_file))
+            return AlignIO.read(tmpfile.name, format=_get_msa_file_format(msa_file))
 
 
 def get_number_of_taxa(msa):

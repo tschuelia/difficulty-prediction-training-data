@@ -59,6 +59,12 @@ class Dataset(P.Model):
     treelikeness = P.FloatField(null=True)
     char_frequencies = JSONField(null=True)
 
+    # Parsimony Trees Features
+    avg_rfdist_parsimony = P.FloatField(null=True)
+    num_topos_parsimony = P.IntegerField(null=True)
+    mean_parsimony_score = P.FloatField(null=True)
+    std_parsimony_score = P.FloatField(null=True)
+
     class Meta:
         database = db
 

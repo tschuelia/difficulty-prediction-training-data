@@ -61,3 +61,22 @@ rule raxmlng_rfdistance_plausible_trees:
         ">> {output.rfDist_log} "
 
 
+rule raxmlng_rfdistance_parsimony_trees:
+    """
+    Rule that computes the RF-Distances between all parsimony trees inferred with Parsimonator using RAxML-NG.
+    """
+    input:
+        all_parsimony_trees = f"{output_files_parsimony_trees}AllParsimonyTrees.trees",
+    output:
+        rfDist      = f"{output_files_parsimony_trees}parsimony.raxml.rfDistances",
+        rfDist_log  = f"{output_files_parsimony_trees}parsimony.raxml.rfDistances.log",
+    params:
+        prefix = f"{output_files_parsimony_trees}parsimony"
+    log:
+        f"{output_files_parsimony_trees}parsimony.raxml.rfDistances.snakelog",
+    shell:
+        "{raxmlng_command} "
+        "--rfdist "
+        "--tree {input.all_parsimony_trees} "
+        "--prefix {params.prefix} "
+        ">> {output.rfDist_log} "

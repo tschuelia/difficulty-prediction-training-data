@@ -3,12 +3,12 @@
 # DNA or AA data and not both
 # note that at the moment this pipeline does not support partitioned analyses
 msa_paths: [
-   /insert/paths/here,
+   /paths/to/msa,
 ]
 
 
 # either DNA or AA
-data_type: "AA"
+data_type: "DNA"
 
 # After running the pipeline, the outdir will contain a subdirectory for each given MSA
 # each subdirectory contains:
@@ -16,20 +16,21 @@ data_type: "AA"
 # - an .sqlite3 database file containing all information, see README.md for database schema
 outdir: "data/"
 
-# provide the paths to the RAxML-NG and IQ-Tree executables here
+# provide the paths to the RAxML-NG, IQ-Tree, and Parsimonator executables here
 software:
   raxml-ng:
-    command: "path/to/raxml-ng"
-    #model: GTR+G
-    model: PROTGTR+G
+    command: "path/to/raxml-ng" # https://github.com/amkozlov/raxml-ng
+    model: GTR+G
     threads: 2
   iqtree:
-    command: "path/to/iqtree"
-    model: WAG+FO+G4
-    #model: GTR+FO+G4
+    command: "path/to/iqtree" # http://www.iqtree.org
+    model: GTR+FO+G4
     threads: 2
+  parsimonator:
+    command: "path/to/parsimonator" # https://github.com/stamatak/Parsimonator-1.0.2
 
 # these variables are used for coding and debugging, we do not recommend changing them
 _debug:
   _num_pars_trees: 50
   _num_rand_trees: 50
+  _num_parsimony_trees: 100

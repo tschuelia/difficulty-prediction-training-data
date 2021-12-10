@@ -77,3 +77,27 @@ rule collect_plausible_trees:
         all_plausible_trees = f"{raxmlng_tree_eval_dir}AllPlausibleTrees.trees",
     script:
         "scripts/collect_plausible_trees.py"
+
+
+rule collect_parsimony_trees:
+    """
+    Rule that collects all parsimony trees inferred with Parsimonator in one file. 
+    """
+    input:
+        parsimony_trees = expand(parsimonator_tree_file_name, seed=parsimony_seeds, allow_missing=True),
+    output:
+        all_trees = f"{output_files_parsimony_trees}AllParsimonyTrees.trees"
+    shell:
+        "cat {input.parsimony_trees} > {output.all_trees}"
+
+
+rule collect_parsimony_logs:
+    """
+    Rule that collects all parsimony trees inferred with Parsimonator in one file. 
+    """
+    input:
+        parsimony_logs = expand(parsimonator_log_file_name, seed=parsimony_seeds, allow_missing=True),
+    output:
+        all_logs = f"{output_files_parsimony_trees}AllParsimonyLogs.log"
+    shell:
+        "cat {input.parsimony_logs} > {output.all_logs}"

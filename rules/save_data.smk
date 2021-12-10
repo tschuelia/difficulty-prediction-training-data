@@ -31,6 +31,11 @@ rule save_data:
 
         # MSA Features
         msa_features = f"{output_files_dir}msa_features.json",
+
+        # Parsimony Trees and logs
+        parsimony_trees = f"{output_files_parsimony_trees}AllParsimonyTrees.trees",
+        parsimony_logs = f"{output_files_parsimony_trees}AllParsimonyLogs.log",
+        parsimony_rfdistance = f"{output_files_parsimony_trees}parsimony.raxml.rfDistances.log",
     output:
         database = f"{db_path}data.sqlite3"
 

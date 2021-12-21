@@ -81,10 +81,10 @@ rule collect_plausible_trees:
 
 rule collect_parsimony_trees:
     """
-    Rule that collects all parsimony trees inferred with Parsimonator in one file. 
+    Rule that collects all parsimony trees inferred with RAxML-NG in one file. 
     """
     input:
-        parsimony_trees = expand(parsimonator_tree_file_name, seed=parsimony_seeds, allow_missing=True),
+        parsimony_trees = expand(parsimony_tree_file_name, seed=parsimony_seeds, allow_missing=True),
     output:
         all_trees = f"{output_files_parsimony_trees}AllParsimonyTrees.trees"
     shell:
@@ -93,10 +93,10 @@ rule collect_parsimony_trees:
 
 rule collect_parsimony_logs:
     """
-    Rule that collects all parsimony trees inferred with Parsimonator in one file. 
+    Rule that collects all parsimony trees in one file. 
     """
     input:
-        parsimony_logs = expand(parsimonator_log_file_name, seed=parsimony_seeds, allow_missing=True),
+        parsimony_logs = expand(parsimony_log_file_name, seed=parsimony_seeds, allow_missing=True),
     output:
         all_logs = f"{output_files_parsimony_trees}AllParsimonyLogs.log"
     shell:

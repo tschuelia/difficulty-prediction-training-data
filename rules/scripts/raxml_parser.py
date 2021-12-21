@@ -164,4 +164,17 @@ def get_model_parameter_estimates(raxmlng_file):
 
     return rate_het, base_freq, subst_rates
 
+def get_all_parsimony_scores(log_file):
+    content = read_file_contents(log_file)
 
+    scores = []
+
+    for line in content:
+        if "Parsimony score" not in line:
+            continue
+
+        _, score = line.split(":")
+        score = int(score.strip())
+        scores.append(score)
+
+    return scores

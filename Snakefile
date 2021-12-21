@@ -2,6 +2,8 @@ import os
 
 configfile: "config.yaml"
 
+data_type = config["data_type"]
+
 raxmlng_command = config["software"]["raxml-ng"]["command"]
 iqtree_command = config["software"]["iqtree"]["command"]
 parsimonator_command = config["software"]["parsimonator"]["command"]
@@ -42,9 +44,16 @@ raxmlng_tree_eval_prefix_rand = raxmlng_tree_eval_dir + "rand_{seed}"
 output_files_iqtree_dir = output_files_dir + "iqtree/"
 
 # File paths for parsimony trees
-output_files_parsimony_trees = output_files_dir + "parsimonator/"
-parsimonator_tree_file_name = output_files_parsimony_trees + "RAxML_parsimonyTree.seed_{seed}.tree"
-parsimonator_log_file_name = output_files_parsimony_trees + "RAxML_parsimonyTree.seed_{seed}.log"
+output_files_parsimony_trees = output_files_dir + "parsimony/"
+if data_type == "DNA":
+    # in this case we use Parsimonator to build the parsimony trees
+    parsimony_tree_file_name = output_files_parsimony_trees + "RAxML_parsimonyTree.seed_{seed}.tree"
+    parsimony_log_file_name = output_files_parsimony_trees + "RAxML_parsimonyTree.seed_{seed}.log"
+else:
+    # in case of Protein Data we use RAxML-NG to build the parsimony trees
+    parsimony_tree_file_name = output_files_parsimony_trees + "seed_{seed}.raxml.startTree"
+    parsimony_log_file_name = output_files_parsimony_trees + "seed_{seed}.raxml.log"
+
 
 rule all:
     input:
@@ -57,5 +66,5 @@ include: "rules/collect_data.smk"
 include: "rules/raxmlng_rfdistance.smk"
 include: "rules/iqtree_significance_tests.smk"
 include: "rules/msa_features.smk"
-include: "rules/parsimonator.smk"
+include: "rules/parsimony.smk"
 include: "rules/save_data.smk"

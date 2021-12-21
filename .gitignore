@@ -2,6 +2,7 @@
 .snakemake
 data
 .DS_Store
+software/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

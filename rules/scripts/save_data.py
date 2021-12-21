@@ -14,7 +14,8 @@ from raxml_parser import (
     get_raxmlng_starting_llh,
     get_raxmlng_num_spr_rounds,
     rel_rfdistance_starting_final,
-    get_model_parameter_estimates
+    get_model_parameter_estimates,
+    get_all_parsimony_scores
 )
 
 from parsimonator_parser import get_all_parsimonator_parsimony_scores
@@ -75,7 +76,11 @@ parsimony_rfdistance = snakemake.input.parsimony_rfdistance
 
 llhs_search = get_all_raxmlng_llhs(search_logs_collected)
 llhs_eval = get_all_raxmlng_llhs(eval_logs_collected)
-parsimony_scores = get_all_parsimonator_parsimony_scores(parsimony_logs)
+
+if data_type == "DNA":
+    parsimony_scores = get_all_parsimonator_parsimony_scores(parsimony_logs)
+else:
+    parsimony_scores = get_all_parsimony_scores(parsimony_logs)
 
 num_searches = len(pars_search_trees) + len(rand_search_trees)
 

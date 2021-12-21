@@ -19,7 +19,7 @@ outdir: "data/"
 # provide the paths to the RAxML-NG, IQ-Tree, and Parsimonator executables here
 software:
   raxml-ng:
-    command: "path/to/raxml-ng" # https://github.com/amkozlov/raxml-ng
+    command: "path/to/raxml-ng" # https://github.com/tschuelia/raxml-ng
     model: GTR+G
     threads: 2
   iqtree:

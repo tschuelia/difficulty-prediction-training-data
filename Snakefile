@@ -19,9 +19,24 @@ parsimony_seeds = range(1, num_parsimony_trees + 1)
 
 # TODO: resolve duplicate names
 msa_paths = config["msa_paths"]
+part_paths = []
+partitioned = False
+
+raxmlng_model = config["software"]["raxml-ng"]["model"]
+iqtree_model = config["software"]["iqtree"]["model"]
+
+if isinstance(msa_paths[0], list):
+    # in this case the MSAs are partitioned
+    msa_paths, part_paths = zip(*msa_paths)
+    partitioned = True
 
 # This assumes, that each msa
 msa_names = [os.path.split(pth)[1] for pth in msa_paths]
+
+if partitioned:
+    models = dict(list(zip(msa_names, part_paths)))
+    raxmlng_model = models
+    iqtree_model = models
 
 msas = dict(zip(msa_names, msa_paths))
 

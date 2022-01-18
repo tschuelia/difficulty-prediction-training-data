@@ -1,4 +1,3 @@
-model = config["software"]["raxml-ng"]["model"]
 threads = config["software"]["raxml-ng"]["threads"]
 
 rule reevaluate_raxml_pars_tree:
@@ -13,7 +12,8 @@ rule reevaluate_raxml_pars_tree:
         eval_log    = f"{raxmlng_tree_eval_prefix_pars}.raxml.eval.log",
     params:
         prefix  = raxmlng_tree_eval_prefix_pars,
-        msa     = lambda wildcards: msas[wildcards.msa]
+        msa     = lambda wildcards: msas[wildcards.msa],
+        model   = lambda wildcards: raxmlng_model[wildcards.msa] if partitioned else raxmlng_model
     log:
         f"{raxmlng_tree_eval_prefix_pars}.snakelog"
     shell:
@@ -21,7 +21,7 @@ rule reevaluate_raxml_pars_tree:
         "--eval "
         "--tree {input.best_tree_of_run} "
         "--msa {params.msa} "
-        "--model {model} "
+        "--model {params.model} "
         "--prefix {params.prefix} "
         "--threads {threads} "
         "--seed 0 "
@@ -40,7 +40,8 @@ rule reevaluate_raxml_rand_tree:
         eval_log    = f"{raxmlng_tree_eval_prefix_rand}.raxml.eval.log",
     params:
         prefix  = raxmlng_tree_eval_prefix_rand,
-        msa     = lambda wildcards: msas[wildcards.msa]
+        msa     = lambda wildcards: msas[wildcards.msa],
+        model   = lambda wildcards: raxmlng_model[wildcards.msa] if partitioned else raxmlng_model
     log:
         f"{raxmlng_tree_eval_prefix_rand}.snakelog"
     shell:
@@ -48,7 +49,7 @@ rule reevaluate_raxml_rand_tree:
         "--eval "
         "--tree {input.best_tree_of_run} "
         "--msa {params.msa} "
-        "--model {model} "
+        "--model {params.model} "
         "--prefix {params.prefix} "
         "--threads {threads} "
         "--seed 0 "

@@ -63,7 +63,7 @@ def read_alignment(msa_file, data_type="DNA"):
         else:
             _convert_aa_msa_to_biopython_format(msa_file, tmpfile)
 
-        tmpfile.seek(0)
+        tmpfile.flush()
         return AlignIO.read(tmpfile.name, format=_get_msa_file_format(msa_file))
 
 

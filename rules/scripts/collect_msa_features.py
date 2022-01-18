@@ -4,8 +4,8 @@ from msa_features import *
 
 msa_file = snakemake.params.msa
 raxmlng_command = snakemake.params.raxmlng_command
-model = snakemake.params.model
 data_type = snakemake.params.data_type
+model = snakemake.params.model
 msa = read_alignment(msa_file, data_type=data_type)
 
 msa_features = {

@@ -33,14 +33,15 @@ rule iqtree_significance_tests_on_eval_trees:
     params:
         msa     = lambda wildcards: msas[wildcards.msa],
         prefix  = f"{output_files_iqtree_dir}significance",
-        model   = config["software"]["iqtree"]["model"],
+        model   = lambda wildcards: iqtree_model[wildcards.msa] if partitioned else iqtree_model,
+        model_str = "-p" if partitioned else "-m",
         threads = config["software"]["iqtree"]["threads"]
     log:
         f"{output_files_iqtree_dir}significance.iqtree.snakelog",
     shell:
         "{iqtree_command} "
         "-s {params.msa} "
-        "-m {params.model} "
+        "{params.model_str} {params.model} "
         "-pre {params.prefix} "
         "-z {input.filtered_trees} "
         "-te {input.best_tree} "

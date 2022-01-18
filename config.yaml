@@ -1,11 +1,22 @@
 # Provide a list of paths to MSA files for which you wish to generate training data
 # currently all MSAs will be run under the same model, so make sure to only provide either
 # DNA or AA data and not both
-# note that at the moment this pipeline does not support partitioned analyses
+
 msa_paths: [
-   /paths/to/msa,
+   /path/to/msa1,
+   /path/to/msa2,
+   ...
 ]
 
+# to use partitioned MSAs, provide a link to the partition file for each MSA
+# the partition file should be in a RAxML-NG and IQ-Tree compatible format
+# note that the MSA features will be computed for the entire alignment
+# In this case, the msa_paths list should be a list of lists:
+# msa_paths: [
+#    [/path/to/msa1, /path/to/msa1.part],
+#    /path/to/msa2, /path/to/msa2.part],
+#    ...
+# ]
 
 # either DNA or AA
 data_type: "DNA"

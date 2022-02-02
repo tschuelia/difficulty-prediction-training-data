@@ -18,7 +18,7 @@ from raxml_parser import (
     get_all_parsimony_scores
 )
 
-from parsimonator_parser import get_all_parsimonator_parsimony_scores
+from parsimonator_parser import get_all_parsimonator_parsimony_scores, get_all_parsimonator_runtimes
 
 from tree_metrics import (
     get_total_branch_length_for_tree,
@@ -79,8 +79,10 @@ llhs_eval = get_all_raxmlng_llhs(eval_logs_collected)
 
 if data_type == "DNA":
     parsimony_scores = get_all_parsimonator_parsimony_scores(parsimony_logs)
+    parsimony_runtimes = get_all_parsimonator_runtimes(parsimony_logs)
 else:
     parsimony_scores = get_all_parsimony_scores(parsimony_logs)
+    parsimony_runtimes = get_raxmlng_elapsed_time(parsimony_logs)
 
 num_searches = len(pars_search_trees) + len(rand_search_trees)
 
@@ -230,11 +232,12 @@ parsimony_trees = [tree.strip() for tree in parsimony_trees if tree]
 
 assert len(parsimony_trees) == len(parsimony_scores)
 
-for (score, tree) in zip(parsimony_scores, parsimony_trees):
+for (score, runtime, tree) in zip(parsimony_scores, parsimony_runtimes, parsimony_trees):
     ParsimonyTree.create(
         uuid            = uuid.uuid4(),
         dataset         = dataset_dbobj,
         dataset_uuid    = dataset_dbobj.uuid,
         newick_tree     = tree,
         parsimony_score = score,
+        compute_time    = runtime
     )

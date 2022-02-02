@@ -110,6 +110,7 @@ class ParsimonyTree(P.Model):
     dataset_uuid = P.UUIDField()
     newick_tree = P.TextField(null=True)
     parsimony_score = P.FloatField(null=True)
+    compute_time = P.FloatField(null=True)
 
     class Meta:
         database = db

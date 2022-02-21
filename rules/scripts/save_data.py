@@ -15,7 +15,8 @@ from raxml_parser import (
     get_raxmlng_num_spr_rounds,
     rel_rfdistance_starting_final,
     get_model_parameter_estimates,
-    get_all_parsimony_scores
+    get_all_parsimony_scores,
+    get_raxmlng_runtimes
 )
 
 from parsimonator_parser import get_all_parsimonator_parsimony_scores, get_all_parsimonator_runtimes
@@ -82,7 +83,7 @@ if data_type == "DNA":
     parsimony_runtimes = get_all_parsimonator_runtimes(parsimony_logs)
 else:
     parsimony_scores = get_all_parsimony_scores(parsimony_logs)
-    parsimony_runtimes = get_raxmlng_elapsed_time(parsimony_logs)
+    parsimony_runtimes = get_raxmlng_runtimes(parsimony_logs)
 
 num_searches = len(pars_search_trees) + len(rand_search_trees)
 

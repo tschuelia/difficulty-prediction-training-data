@@ -69,29 +69,54 @@ def get_best_raxmlng_llh(raxmlng_file):
     return max(all_llhs)
 
 
+
+def get_raxmlng_time_from_line(line):
+
+    # two cases now:
+    # either the run was cancelled an rescheduled
+    if "restarts" in line:
+        # line looks like this: "Elapsed time: 5562.869 seconds (this run) / 91413.668 seconds (total with restarts)"
+        _, right = line.split("/")
+        value = right.split(" ")[1]
+        return float(value)
+
+    # ...or the run ran in one sitting...
+    else:
+        # line looks like this: "Elapsed time: 63514.086 seconds"
+        value = line.split(" ")[2]
+        return float(value)
+
+
 def get_raxmlng_elapsed_time(log_file):
     content = read_file_contents(log_file)
 
     for line in content:
         if "Elapsed time:" not in line:
             continue
-        # two cases now:
-        # either the run was cancelled an rescheduled
-        if "restarts" in line:
-            # line looks like this: "Elapsed time: 5562.869 seconds (this run) / 91413.668 seconds (total with restarts)"
-            _, right = line.split("/")
-            value = right.split(" ")[1]
-            return float(value)
-
-        # ...or the run ran in one sitting...
         else:
-            # line looks like this: "Elapsed time: 63514.086 seconds"
-            value = line.split(" ")[2]
-            return float(value)
+            return get_raxmlng_time_from_line(line)
 
     raise ValueError(
         f"The given input file {log_file} does not contain the elapsed time."
     )
+
+
+def get_raxmlng_runtimes(log_file):
+    content = read_file_contents(log_file)
+
+    all_times = []
+
+    for line in content:
+        if "Elapsed time:" not in line:
+            continue
+        else:
+            all_times.append(get_raxmlng_time_from_line(line))
+
+    if not all_times:
+        raise ValueError(
+            f"The given input file {log_file} does not contain the elapsed time."
+        )
+
 
 
 def get_raxmlng_num_spr_rounds(log_file):

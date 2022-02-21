@@ -117,6 +117,8 @@ def get_raxmlng_runtimes(log_file):
             f"The given input file {log_file} does not contain the elapsed time."
         )
 
+    return all_times
+
 
 
 def get_raxmlng_num_spr_rounds(log_file):

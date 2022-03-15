@@ -5,17 +5,18 @@ from collections import Counter
 from itertools import product
 import math
 import numpy as np
-from pathlib import Path
 import random
 import subprocess
 from tempfile import TemporaryDirectory, NamedTemporaryFile
 
+from custom_types import FilePath
+
 STATE_CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ!\"#$%&'()*+,/:;<=>@[\\]^_{|}~"
+DNA_CHARS = "ATUCGMRWSYKVHDBN"
 GAP_CHARS = "-?."
-DNA_CHARS = "ACTG"
 
 
-def _convert_dna_msa_to_biopython_format(msa_file, tmpfile):
+def _convert_dna_msa_to_biopython_format(msa_file: FilePath, tmpfile: FilePath) -> None:
     """
     The unknonwn char in DNA MSA files for Biopython to work
     has to be "N" instead of "X" -> replace all occurences
@@ -44,19 +45,72 @@ def _convert_aa_msa_to_biopython_format(msa_file, tmpfile):
 
 
 def _get_msa_file_format(msa_file):
-    """
-    For now: only support .fasta and .phy files
-    TODO: include more file types
-    """
-    file_ending = Path(msa_file).suffix
-    if file_ending == ".phy":
+    first_line = open(msa_file).readline().strip()
+
+    try:
+        # phylip file contains two integer numbers in the first line separated by whitespace
+        _num1, _num2, *_ = first_line.split()
+        _num1 = int(_num1)
+        _num2 = int(_num2)
+        # in case these conversions worked, the file is (most likely) in phylip format
         return "phylip-relaxed"
-    elif file_ending == ".fasta":
-        return "fasta"
-    raise ValueError(f"This file type is currently not supported: {file_ending}")
+    except:
+        # if the MSA is in fasta format, the first line should start with a '>' character
+        if first_line.startswith(">"):
+            return "fasta"
+
+    raise ValueError(f"The file type of this MSA could not be autodetected, please check file.")
 
 
-def read_alignment(msa_file, data_type="DNA"):
+def guess_msa_file_data_type(msa_file):
+    format = _get_msa_file_format(msa_file)
+    msa_content = open(msa_file).readlines()
+
+    sequence_chars = set()
+
+    if format == "phylip-relaxed":
+        # the sequences start in the second line and the schema is "taxon_name [SEQUENCE]"
+        for line in msa_content[1:]:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                # ...with some files the sequences are split into multiple lines
+                # in this case the taxon name is skipped and splitting will raise a ValueError
+                # if this happens, we simply add the rest of the block to the set
+                _, sequence = line.split(None, 1)
+            except ValueError:
+                # read the line as is
+                sequence = line
+            # remove whitespace and add the characters to the set of unique characters of this MSA
+            sequence = sequence.strip().replace(" ", "")
+            for char in set(sequence):
+                sequence_chars.add(char)
+    elif format == "fasta":
+        seen_taxon_name = False
+        # taxon names start with a ">" followed by the sequence
+        for line in msa_content:
+            line = line.strip()
+            if line.startswith(">"):
+                seen_taxon_name = True
+                continue
+            else:
+                if seen_taxon_name:
+                    for char in set(line):
+                        sequence_chars.add(char)
+                    seen_taxon_name = False
+    else:
+        raise ValueError(f"Unsupported MSA file format {format}. Supported formats are phylip and fasta.")
+
+    # now check whether the sequence_chars contain only DNA and GAP chars or not
+    if all([(c in DNA_CHARS) or (c in GAP_CHARS) for c in sequence_chars]):
+        return "DNA"
+    else:
+        return "AA"
+
+
+def read_alignment(msa_file):
+    data_type = guess_msa_file_data_type(msa_file)
     with NamedTemporaryFile(mode="w") as tmpfile:
         if data_type == "DNA":
             _convert_dna_msa_to_biopython_format(msa_file, tmpfile)

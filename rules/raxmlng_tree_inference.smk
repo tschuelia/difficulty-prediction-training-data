@@ -1,5 +1,3 @@
-threads = config["software"]["raxml-ng"]["threads"]
-
 rule raxmlng_pars_tree:
     """
     Rule that infers a single tree based on a parsimony starting tree using RAxML-NG.
@@ -20,7 +18,6 @@ rule raxmlng_pars_tree:
         "--msa {params.msa} "
         "--model {params.model} "
         "--prefix {params.prefix} "
-        "--threads {threads} "
         "--seed {wildcards.seed} "
         "--tree pars{{1}} "
         "> {output.raxml_log} "
@@ -45,7 +42,6 @@ rule raxmlng_rand_tree:
         "--msa {params.msa} "
         "--model {params.model} "
         "--prefix {params.prefix} "
-        "--threads {threads} "
         "--seed {wildcards.seed} "
-        "--tree pars{{1}} "
+        "--tree rand{{1}} "
         "> {output.raxml_log} "

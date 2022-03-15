@@ -2,11 +2,8 @@ import os
 
 configfile: "config.yaml"
 
-data_type = config["data_type"]
-
 raxmlng_command = config["software"]["raxml-ng"]["command"]
 iqtree_command = config["software"]["iqtree"]["command"]
-parsimonator_command = config["software"]["parsimonator"]["command"]
 
 num_pars_trees = config["_debug"]["_num_pars_trees"]
 num_rand_trees  = config["_debug"]["_num_rand_trees"]
@@ -60,19 +57,13 @@ output_files_iqtree_dir = output_files_dir + "iqtree/"
 
 # File paths for parsimony trees
 output_files_parsimony_trees = output_files_dir + "parsimony/"
-if data_type == "DNA":
-    # in this case we use Parsimonator to build the parsimony trees
-    parsimony_tree_file_name = output_files_parsimony_trees + "RAxML_parsimonyTree.seed_{seed}.tree"
-    parsimony_log_file_name = output_files_parsimony_trees + "RAxML_parsimonyTree.seed_{seed}.log"
-else:
-    # in case of Protein Data we use RAxML-NG to build the parsimony trees
-    parsimony_tree_file_name = output_files_parsimony_trees + "seed_{seed}.raxml.startTree"
-    parsimony_log_file_name = output_files_parsimony_trees + "seed_{seed}.raxml.log"
+parsimony_tree_file_name = output_files_parsimony_trees + "seed_{seed}.raxml.startTree"
+parsimony_log_file_name = output_files_parsimony_trees + "seed_{seed}.raxml.log"
 
 
 rule all:
     input:
-        expand(f"{db_path}data.sqlite3", msa=msa_names)
+        expand(f"{db_path}training_data.parquet", msa=msa_names)
 
 
 include: "rules/raxmlng_tree_inference.smk"

@@ -50,7 +50,7 @@ class Dataset(P.Model):
     # MSA Features
     num_taxa = P.IntegerField(null=True)
     num_sites = P.IntegerField(null=True)
-    num_patters = P.IntegerField(null=True)
+    num_patterns = P.IntegerField(null=True)
     proportion_gaps = P.FloatField(null=True)
     proportion_invariant = P.FloatField(null=True)
     entropy = P.FloatField(null=True)

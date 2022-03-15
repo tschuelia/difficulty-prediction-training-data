@@ -9,6 +9,7 @@ dependencies:
   - ca-certificates
   - certifi
   - openssl
+  - pandas
   - pip
     - peewee
     -  biopython

@@ -4,9 +4,9 @@ from msa_features import *
 
 msa_file = snakemake.params.msa
 raxmlng_command = snakemake.params.raxmlng_command
-data_type = snakemake.params.data_type
 model = snakemake.params.model
-msa = read_alignment(msa_file, data_type=data_type)
+msa = read_alignment(msa_file)
+data_type = guess_msa_file_data_type(msa_file)
 
 msa_features = {
     "taxa": get_number_of_taxa(msa),

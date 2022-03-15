@@ -18,9 +18,6 @@ msa_paths: [
 #    ...
 # ]
 
-# either DNA or AA
-data_type: "DNA"
-
 # After running the pipeline, the outdir will contain a subdirectory for each given MSA
 # each subdirectory contains:
 # - a directory called "output_files": contains all RAxML-NG and IQ-Tree log files

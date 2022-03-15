@@ -27,7 +27,7 @@ from tree_metrics import (
     get_avg_branch_lenghts_for_tree,
 )
 
-from msa_features import guess_msa_file_data_type
+from msa_features import MSA
 
 db.init(snakemake.output.database)
 db.connect()
@@ -81,7 +81,7 @@ parsimony_scores = get_all_parsimony_scores(parsimony_logs)
 parsimony_runtimes = get_raxmlng_runtimes(parsimony_logs)
 
 num_searches = len(pars_search_trees) + len(rand_search_trees)
-data_type = guess_msa_file_data_type(snakemake.params.msa)
+data_type = MSA(snakemake.params.msa).guess_data_type()
 
 # for the starting tree features, we simply take the first parsimony tree inference
 single_tree = pars_search_trees[0]

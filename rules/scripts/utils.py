@@ -1,3 +1,5 @@
+import subprocess
+
 def read_file_contents(file_path):
     with open(file_path) as f:
         content = f.readlines()
@@ -39,3 +41,11 @@ def get_multiple_values_from_file(input_file, search_string):
             values.append(get_value_from_line(l, search_string))
 
     return values
+
+
+def run_cmd(cmd):
+    try:
+        subprocess.check_output(cmd)
+    except Exception as e:
+        print(f"Error running command \"{' '.join(cmd)}\"")
+        raise e

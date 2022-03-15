@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 
 
-def get_difficulty_labels(df):
+def get_difficulty_labels(df: pd.DataFrame) -> list[float]:
     """
     difficult if:
     - avg_rfdist_plausible is close to 1.0 -> + val

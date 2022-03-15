@@ -1,6 +1,6 @@
 from Bio import AlignIO
 from Bio.Align import MultipleSeqAlignment
-from Bio.Phylo.TreeConstruction import DistanceCalculator
+from Bio.Phylo.TreeConstruction import DistanceCalculator, DistanceMatrix
 from collections import Counter
 from itertools import product
 import math
@@ -16,7 +16,7 @@ GAP_CHARS = "-?."
 
 
 class MSA:
-    def __init__(self, msa_file):
+    def __init__(self, msa_file: FilePath):
         self.msa_file = msa_file
         self.data_type = self.guess_data_type()
         with NamedTemporaryFile(mode="w") as tmpfile:
@@ -69,7 +69,9 @@ class MSA:
             if first_line.startswith(">"):
                 return "fasta"
 
-        raise ValueError(f"The file type of this MSA could not be autodetected, please check file.")
+        raise ValueError(
+            f"The file type of this MSA could not be autodetected, please check file."
+        )
 
     def guess_data_type(self) -> DataType:
         format = self._get_file_format()
@@ -109,7 +111,9 @@ class MSA:
                             sequence_chars.add(char)
                         seen_taxon_name = False
         else:
-            raise ValueError(f"Unsupported MSA file format {format}. Supported formats are phylip and fasta.")
+            raise ValueError(
+                f"Unsupported MSA file format {format}. Supported formats are phylip and fasta."
+            )
 
         # now check whether the sequence_chars contain only DNA and GAP chars or not
         if all([(c in DNA_CHARS) or (c in GAP_CHARS) for c in sequence_chars]):
@@ -117,13 +121,13 @@ class MSA:
         else:
             return "AA"
 
-    def get_number_of_taxa(self):
+    def get_number_of_taxa(self) -> int:
         return len(self.msa)
 
-    def get_number_of_sites(self):
+    def get_number_of_sites(self) -> int:
         return self.msa.get_alignment_length()
 
-    def get_column_entropies(self):
+    def get_column_entropies(self) -> list[float]:
         def _remove_gaps_from_sequence(seq):
             for char in GAP_CHARS:
                 seq = seq.replace(char, "")
@@ -146,15 +150,17 @@ class MSA:
 
             entropy = -entropy
 
-            assert entropy >= 0, f"Entropy negative, check computation. Entropy is {entropy}"
+            assert (
+                entropy >= 0
+            ), f"Entropy negative, check computation. Entropy is {entropy}"
 
             entropies.append(entropy)
         return entropies
 
-    def get_avg_entropy(self):
+    def get_avg_entropy(self) -> float:
         return np.mean(self.get_column_entropies())
 
-    def bollback_multinomial(self):
+    def bollback_multinomial(self) -> float:
         """
         Compute the bollback multinomial statistic on the msa file
         According to Bollback, JP: Bayesian model adequacy and choice in phylogenetics (2002)
@@ -174,7 +180,7 @@ class MSA:
         mult = mult - msa_length * math.log(msa_length)
         return mult
 
-    def _get_distance_matrix(self, num_samples):
+    def _get_distance_matrix(self, num_samples: int) -> DistanceMatrix:
         """
         For large MSAs (i.e. more than num_samples taxa), computing the distance matrix
         is computationally very expensive.
@@ -191,7 +197,7 @@ class MSA:
         calculator = DistanceCalculator(model=model)
         return calculator.get_distance(_msa)
 
-    def treelikeness_score(self, n_samples=100):
+    def treelikeness_score(self, n_samples: int = 100) -> float:
         """
         Compute the treelikeness score according to
         δ Plots: A Tool for Analyzing Phylogenetic Distance Data, Holland, Huber, Dress and Moulton (2002)
@@ -204,9 +210,9 @@ class MSA:
 
         frac = num_samples // 4
         X = options[:frac]
-        Y = options[frac: 2 * frac]
-        U = options[2 * frac: 3 * frac]
-        V = options[3 * frac:]
+        Y = options[frac : 2 * frac]
+        U = options[2 * frac : 3 * frac]
+        V = options[3 * frac :]
 
         res = product(X, Y, U, V)
         deltas = []
@@ -240,7 +246,7 @@ class MSA:
 
         return np.mean(deltas)
 
-    def get_character_frequencies(self):
+    def get_character_frequencies(self) -> Dict[str, int]:
         counts = {}
 
         for char in STATE_CHARS:

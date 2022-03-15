@@ -1,13 +1,16 @@
 from tempfile import TemporaryDirectory
 
+from custom_types import *
 from utils import run_cmd
 
 
 class RAxMLNG:
-    def __init__(self, exe_path):
+    def __init__(self, exe_path: ExePath):
         self.exe_path = exe_path
 
-    def __base_cmd(self, msa_file, model, prefix, **kwargs):
+    def __base_cmd(
+        self, msa_file: FilePath, model: Model, prefix: FilePath, **kwargs
+    ) -> Command:
         additional_settings = []
         for key, value in kwargs.items():
             if value is None:
@@ -26,15 +29,26 @@ class RAxMLNG:
             *additional_settings,
         ]
 
-    def run_alignment_parse(self, msa_file, model, prefix, **kwargs):
+    def run_alignment_parse(
+        self, msa_file: FilePath, model: Model, prefix: str, **kwargs
+    ) -> None:
         cmd = self.__base_cmd(msa_file, model, prefix, parse=None, **kwargs)
         run_cmd(cmd)
 
-    def infer_parsimony_trees(self, msa_file, model, prefix, n_trees=100, **kwargs):
-        cmd = self.__base_cmd(msa_file, model, prefix, start=None, tree=f"pars{{{n_trees}}}", **kwargs)
+    def infer_parsimony_trees(
+        self,
+        msa_file: FilePath,
+        model: Model,
+        prefix: str,
+        n_trees: int = 100,
+        **kwargs,
+    ) -> None:
+        cmd = self.__base_cmd(
+            msa_file, model, prefix, start=None, tree=f"pars{{{n_trees}}}", **kwargs
+        )
         run_cmd(cmd)
 
-    def get_rel_rfdistance(self, trees_file, **kwargs):
+    def get_rel_rfdistance(self, trees_file: FilePath, **kwargs) -> float:
         additional_settings = []
         for key, value in kwargs.items():
             if value is None:
@@ -61,7 +75,9 @@ class RAxMLNG:
 
         raise ValueError("Relative RF Distance not found in file", outlog)
 
-    def get_patterns_gaps_invariant(self, msa_file, model):
+    def get_patterns_gaps_invariant(
+        self, msa_file: FilePath, model: Model
+    ) -> Tuple(int, float, float):
         with TemporaryDirectory() as tmpdir:
             prefix = tmpdir + "/parse"
             self.run_alignment_parse(msa_file, model, prefix)

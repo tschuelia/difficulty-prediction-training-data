@@ -1,4 +1,4 @@
-from raxml_parser import get_all_raxmlng_llhs
+from raxmlng_parser import get_all_raxmlng_llhs
 from utils import read_file_contents
 
 all_trees = read_file_contents(snakemake.input.all_eval_trees)

@@ -1,13 +1,16 @@
 import subprocess
 
-def read_file_contents(file_path):
+from custom_types import *
+
+
+def read_file_contents(file_path: FilePath) -> list[str]:
     with open(file_path) as f:
         content = f.readlines()
 
     return [l.strip() for l in content]
 
 
-def get_value_from_line(line, search_string):
+def get_value_from_line(line: str, search_string: str) -> float:
     line = line.strip()
     if search_string in line:
         _, value = line.rsplit(" ", 1)
@@ -18,7 +21,7 @@ def get_value_from_line(line, search_string):
     )
 
 
-def get_single_value_from_file(input_file, search_string):
+def get_single_value_from_file(input_file: FilePath, search_string: str) -> float:
     with open(input_file) as f:
         lines = f.readlines()
 
@@ -31,7 +34,9 @@ def get_single_value_from_file(input_file, search_string):
     )
 
 
-def get_multiple_values_from_file(input_file, search_string):
+def get_multiple_values_from_file(
+    input_file: FilePath, search_string: str
+) -> list[float]:
     with open(input_file) as f:
         lines = f.readlines()
 
@@ -43,7 +48,7 @@ def get_multiple_values_from_file(input_file, search_string):
     return values
 
 
-def run_cmd(cmd):
+def run_cmd(cmd: Command) -> None:
     try:
         subprocess.check_output(cmd)
     except Exception as e:

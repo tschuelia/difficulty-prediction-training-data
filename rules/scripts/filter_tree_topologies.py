@@ -1,6 +1,7 @@
 import pickle
 
-from raxml_parser import get_raxmlng_num_unique_topos, read_rfdistances
+from raxmlng_parser import get_raxmlng_num_unique_topos, read_rfdistances
+
 
 def get_rfdist_clusters(rfdistances, trees):
     # instead of indexing via the eval_tree.id

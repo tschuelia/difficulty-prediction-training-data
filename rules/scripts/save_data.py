@@ -5,7 +5,7 @@ import uuid
 
 from database import *
 from iqtree_statstest_parser import get_iqtree_results, get_iqtree_results_for_eval_tree_str
-from raxml_parser import (
+from raxmlng_parser import (
     get_raxmlng_rel_rf_distance,
     get_raxmlng_num_unique_topos,
     get_all_raxmlng_llhs,

@@ -252,10 +252,16 @@ class MSA:
         for char in STATE_CHARS:
             counts[char] = 0
 
+        for char in GAP_CHARS:
+            counts[char] = 0
+
         for sequence in self.msa:
             sequence = sequence.seq
 
             for char in STATE_CHARS:
+                counts[char] += sequence.count(char)
+
+            for char in GAP_CHARS:
                 counts[char] += sequence.count(char)
 
         return counts

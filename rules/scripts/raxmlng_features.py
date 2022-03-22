@@ -77,7 +77,7 @@ class RAxMLNG:
 
     def get_patterns_gaps_invariant(
         self, msa_file: FilePath, model: Model
-    ) -> Tuple(int, float, float):
+    ) -> Tuple[int, float, float]:
         with TemporaryDirectory() as tmpdir:
             prefix = tmpdir + "/parse"
             self.run_alignment_parse(msa_file, model, prefix)

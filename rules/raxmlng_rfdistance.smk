@@ -53,12 +53,24 @@ rule raxmlng_rfdistance_plausible_trees:
         prefix = f"{raxmlng_tree_eval_dir}plausible"
     log:
         f"{raxmlng_tree_eval_dir}plausible.raxml.rfDistances.snakelog",
-    shell:
-        "{raxmlng_command} "
-        "--rfdist "
-        "--tree {input.all_plausible_trees} "
-        "--prefix {params.prefix} "
-        ">> {output.rfDist_log} "
+    run:
+        num_plausible = len(open(input.all_plausible_trees).readlines())
+        # we need this distinction because RAxML-NG requires more than one tree in the input file
+        # in order to compute the RF Distance
+        # but there might be no plausible trees for a given dataset
+        if num_plausible <= 1:
+            # write 0.0 as RF-Distance in a dummy log
+            with open(output.rfDist_log, "w") as f:
+                f.write("""
+                Number of unique topologies in this tree set: 1
+                Average absolute RF distance in this tree set: 0.0
+                Average relative RF distance in this tree set: 0.0
+                """)
+
+            with open(output.rfDist, "w") as f:
+                f.write("0 1 0.0 0.0")
+        else:
+            shell("{raxmlng_command} --rfdist --tree {input.all_plausible_trees} --prefix {params.prefix} >> {output.rfDist_log}")
 
 
 rule raxmlng_rfdistance_parsimony_trees:

@@ -12,21 +12,21 @@ from msa_features import MSA
 @pytest.fixture
 def dna_phylip_msa():
     cwd = os.getcwd()
-    phylip_file = f"{cwd}/tests/data/DNA/0.phy"
+    phylip_file = f"{cwd}/.tests/data/DNA/0.phy"
     return MSA(phylip_file)
 
 
 @pytest.fixture
 def dna_fasta_msa():
     cwd = os.getcwd()
-    fasta_file = f"{cwd}/tests/data/DNA/0.fasta"
+    fasta_file = f"{cwd}/.tests/data/DNA/0.fasta"
     return MSA(fasta_file)
 
 
 @pytest.fixture
 def small_msa():
     cwd = os.getcwd()
-    phylip_file = f"{cwd}/tests/data/DNA/small.fasta"
+    phylip_file = f"{cwd}/.tests/data/DNA/small.fasta"
     return MSA(phylip_file)
 
 
@@ -41,7 +41,7 @@ class TestMSAFeatures:
     def test_guess_msa_file_data_type(self):
         cwd = os.getcwd()
         for true_type in ["DNA", "AA"]:
-            base_dir = f"{cwd}/tests/data/{true_type}/"
+            base_dir = f"{cwd}/.tests/data/{true_type}/"
             for msa_file in os.listdir(base_dir):
                 msa_file = base_dir + msa_file
                 msa = MSA(msa_file)

@@ -29,11 +29,11 @@ def get_max_branch_length_for_tree(newick_str: Newick) -> float:
     return max(all_brlens)
 
 
-def get_avg_branch_lenghts_for_tree(newick_str: Newick) -> float:
+def get_avg_branch_lengths_for_tree(newick_str: Newick) -> float:
     all_brlens = get_all_branch_lengths_for_tree(newick_str)
     return np.mean(all_brlens)
 
 
-def get_std_branch_lenghts_for_tree(newick_str: Newick) -> float:
+def get_std_branch_lengths_for_tree(newick_str: Newick) -> float:
     all_brlens = get_all_branch_lengths_for_tree(newick_str)
     return np.std(all_brlens)

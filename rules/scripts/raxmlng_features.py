@@ -48,6 +48,16 @@ class RAxMLNG:
         )
         run_cmd(cmd)
 
+    def parse_rfdist_log(self, log_file):
+        for line in open(log_file).readlines():
+            line = line.strip()
+            if "Average relative RF distance in this tree set:" not in line:
+                continue
+            _, rfdist = line.rsplit(" ", 1)
+            return float(rfdist)
+
+        raise ValueError("Relative RF Distance not found in file", log_file)
+
     def get_rel_rfdistance(self, trees_file: FilePath, **kwargs) -> float:
         additional_settings = []
         for key, value in kwargs.items():
@@ -64,16 +74,33 @@ class RAxMLNG:
         ]
         run_cmd(cmd)
 
-        outlog = trees_file + ".raxml.log"
+        return self.parse_rfdist_log(trees_file + ".raxml.log")
 
-        for line in open(outlog).readlines():
-            line = line.strip()
-            if "Average relative RF distance in this tree set:" not in line:
-                continue
-            _, rfdist = line.rsplit(" ", 1)
-            return float(rfdist)
+    def parse_log(self, log_file: FilePath) -> Tuple[int, float, float]:
+        patterns = None
+        gaps = None
+        invariant = None
+        for line in open(log_file).readlines():
+            if line.startswith("Alignment sites"):
+                # number of alignment patterns
+                # Alignment sites / patterns: 1940 / 933
+                _, numbers = line.split(":")
+                _, patterns = [int(el) for el in numbers.split("/")]
+            elif line.startswith("Gaps"):
+                # proportion of gaps
+                _, number = line.split(":")
+                percentage, _ = number.strip().split(" ")
+                gaps = float(percentage) / 100.0
+            elif line.startswith("Invariant sites"):
+                # proportion invariant sites
+                _, number = line.split(":")
+                percentage, _ = number.strip().split(" ")
+                invariant = float(percentage) / 100.0
 
-        raise ValueError("Relative RF Distance not found in file", outlog)
+        if patterns is None or gaps is None or invariant is None:
+            raise ValueError("Error parsing raxml-ng log")
+
+        return patterns, gaps, invariant
 
     def get_patterns_gaps_invariant(
         self, msa_file: FilePath, model: Model
@@ -81,27 +108,4 @@ class RAxMLNG:
         with TemporaryDirectory() as tmpdir:
             prefix = tmpdir + "/parse"
             self.run_alignment_parse(msa_file, model, prefix)
-            patterns = None
-            gaps = None
-            invariant = None
-            for line in open(f"{prefix}.raxml.log").readlines():
-                if line.startswith("Alignment sites"):
-                    # number of alignment patterns
-                    # Alignment sites / patterns: 1940 / 933
-                    _, numbers = line.split(":")
-                    _, patterns = [int(el) for el in numbers.split("/")]
-                elif line.startswith("Gaps"):
-                    # proportion of gaps
-                    _, number = line.split(":")
-                    percentage, _ = number.strip().split(" ")
-                    gaps = float(percentage) / 100.0
-                elif line.startswith("Invariant sites"):
-                    # proportion invariant sites
-                    _, number = line.split(":")
-                    percentage, _ = number.strip().split(" ")
-                    invariant = float(percentage) / 100.0
-
-            if patterns is None or gaps is None or invariant is None:
-                raise ValueError("Error parsing raxml-ng log")
-
-            return patterns, gaps, invariant
+            return self.parse_log(f"{prefix}.raxml.log")

@@ -23,8 +23,8 @@ from tree_metrics import (
     get_total_branch_length_for_tree,
     get_min_branch_length_for_tree,
     get_max_branch_length_for_tree,
-    get_std_branch_lenghts_for_tree,
-    get_avg_branch_lenghts_for_tree,
+    get_std_branch_lengths_for_tree,
+    get_avg_branch_lengths_for_tree,
 )
 
 from msa_features import MSA
@@ -132,8 +132,8 @@ dataset_dbobj = Dataset.create(
     rate_heterogeneity_final        = rate_het,
     eq_frequencies_final            = base_freq,
     substitution_rates_final        = subst_rates,
-    average_branch_length_final     = get_avg_branch_lenghts_for_tree(newick_final),
-    std_branch_length_final         = get_std_branch_lenghts_for_tree(newick_final),
+    average_branch_length_final     = get_avg_branch_lengths_for_tree(newick_final),
+    std_branch_length_final         = get_std_branch_lengths_for_tree(newick_final),
     total_branch_length_final       = get_total_branch_length_for_tree(newick_final),
     minimum_branch_length_final     = get_min_branch_length_for_tree(newick_final),
     maximum_branch_length_final     = get_max_branch_length_for_tree(newick_final),

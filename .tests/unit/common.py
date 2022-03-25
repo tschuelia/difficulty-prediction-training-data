@@ -12,6 +12,7 @@ import warnings
 import yaml
 import pandas as pd
 import pickle
+import sqlite3
 
 import sys
 
@@ -280,3 +281,17 @@ class FilteredClusterChecker(OutputChecker):
                 self.data_path, self.expected_path, self.workdir
             )
             newick_checker.compare_files(generated_file, expected_file)
+
+
+class DatabaseChecker(OutputChecker):
+    def compare_files(self, generated_file, expected_file):
+        if generated_file.suffix == ".sqlite3":
+            gen_con = sqlite3.connect(generated_file)
+            exp_con = sqlite3.connect(expected_file)
+
+            for table in ["Dataset", "RaxmlNGTree", "ParsimonyTree"]:
+                generated = pd.read_sql_query(f"SELECT * FROM {table}", gen_con)
+                expected = pd.read_sql_query(f"SELECT * FROM {table}", exp_con)
+
+                assert generated.shape == expected.shape
+                assert generated.columns.tolist().sort() == expected.columns.tolist().sort()

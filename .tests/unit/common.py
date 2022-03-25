@@ -7,8 +7,11 @@ from io import StringIO
 from pathlib import Path
 import subprocess as sp
 import os
+import ete3
 import warnings
 import yaml
+import pandas as pd
+import pickle
 
 import sys
 
@@ -65,6 +68,14 @@ class OutputChecker:
 
 class NewickTreeChecker(OutputChecker):
     def compare_tree_files(self, generated_tree_string, expected_tree_string):
+        # first: check if the tree topologies are equal
+        generated_tree = ete3.Tree(generated_tree_string)
+        expected_tree = ete3.Tree(expected_tree_string)
+
+        rfdist = generated_tree.robinson_foulds(expected_tree, unrooted_trees=True)[0]
+        assert rfdist == pytest.approx(0)
+
+        # second: compare if the branch lengths are approximately equal
         generated_tree = Phylo.read(StringIO(generated_tree_string), "newick")
         expected_tree = Phylo.read(StringIO(expected_tree_string), "newick")
 
@@ -76,10 +87,12 @@ class NewickTreeChecker(OutputChecker):
             node.branch_length for node in expected_tree.find_clades(branch_length=True)
         ]
 
-        # TODO: this will most likely not work if I run this on another machine
-        # the branch length flaoting points might not be exactly identical
-        # but for now this is good enough
-        assert generated_branch_lenths == expected_branch_lenths
+        # sort the branch lengths before comparing them
+        # this should cancel out effects of different display options for equal tree topologies
+        generated_branch_lenths.sort()
+        expected_branch_lenths.sort()
+
+        assert all([gen == pytest.approx(exp, 0.1) for gen, exp in zip(generated_branch_lenths, expected_branch_lenths)])
 
     def compare_files(self, generated_file, expected_file):
         generated_trees = [l.strip() for l in open(generated_file).readlines() if l]
@@ -198,3 +211,72 @@ class RFDistanceChecker(OutputChecker):
         elif generated_file.suffix == ".rfDistances":
             # for the pairwise rfDistances use the parent's bytewise comparison
             super().compare_files(generated_file, expected_file)
+
+
+class PandasDataFrameChecker(OutputChecker):
+    def compare_files(self, generated_file, expected_file):
+        # since the UUID is different each run, ignore this column when comparing the dataframes
+        generated_df = pd.read_parquet(generated_file).drop("uuid", axis=1)
+        expected_df = pd.read_parquet(expected_file).drop("uuid", axis=1)
+
+        pd.testing.assert_frame_equal(generated_df, expected_df)
+
+
+class IQTreeSignificanceTestChecker(OutputChecker):
+    def _compare_result_files(self, generated_file, expected_file):
+        generated_res = [l.strip() for l in open(generated_file).readlines() if l]
+        expected_res = [l.strip() for l in open(expected_file).readlines() if l]
+
+        result_start = -1
+        result_end = -1
+
+        for i, (gen, exp) in enumerate(zip(generated_res, expected_res)):
+            if gen.startswith("Tree") and "logL" in gen:
+                assert exp.startswith("Tree") and "logL" in exp
+                result_start = i + 2
+            elif "logL difference from the maximal logl in the set" in gen:
+                assert "logL difference from the maximal logl in the set" in exp
+                result_end = i
+
+        for gen, exp in zip(generated_res[result_start:result_end], expected_res[result_start:result_end]):
+            gen_res = gen.split()
+            exp_res = exp.split()
+
+            for g, e in zip(gen_res, exp_res):
+                assert float(g) == float(e)
+
+    def _compare_log_files(self, generated_file, expected_file):
+        generated_log = [l.strip() for l in open(generated_file).readlines() if l]
+        expected_log = [l.strip() for l in open(expected_file).readlines() if l]
+
+        for gen, exp in zip(generated_log, expected_log):
+            if gen.startswith("Seed:"):
+                assert exp.startswith("Seed:")
+                gen_seed = int(gen.split(":", 1)[1].split("(")[0].strip())
+                exp_seed = int(exp.split(":", 1)[1].split("(")[0].strip())
+
+                assert gen_seed == exp_seed
+
+    def compare_files(self, generated_file, expected_file):
+        if generated_file.suffix == ".iqtree":
+            self._compare_result_files(generated_file, expected_file)
+        elif generated_file.suffix == ".log":
+            self._compare_log_files(generated_file, expected_file)
+
+
+class FilteredClusterChecker(OutputChecker):
+    def compare_files(self, generated_file, expected_file):
+        if generated_file.suffix == ".pkl":
+            generated_clusters = pickle.load(open(generated_file, "rb"))
+            expected_clusters = pickle.load(open(expected_file, "rb"))
+
+            for g in generated_clusters:
+                assert g in expected_clusters
+
+            for e in expected_clusters:
+                assert e in generated_clusters
+        elif generated_file.suffix == ".trees":
+            newick_checker = NewickTreeChecker(
+                self.data_path, self.expected_path, self.workdir
+            )
+            newick_checker.compare_files(generated_file, expected_file)

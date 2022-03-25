@@ -45,7 +45,7 @@ def test_iqtree_significance_tests_on_eval_trees():
         # To modify this behavior, you can inherit from common.OutputChecker in here
         # and overwrite the method `compare_files(generated_file, expected_file), 
         # also see common.py.
-        common.OutputChecker(data_path, expected_path, workdir).check()
+        common.IQTreeSignificanceTestChecker(data_path, expected_path, workdir).check()
 
         # TODO: change the behaviour: instead of comparing it byte by byte we want to check
         # - if .iqtree contains the same test results

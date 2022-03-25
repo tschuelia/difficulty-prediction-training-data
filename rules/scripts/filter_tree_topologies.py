@@ -29,8 +29,6 @@ def get_rfdist_clusters(log_path, all_trees):
 
 def filter_tree_topologies(
         eval_trees: List[Newick],
-        filtered_trees_path: FilePath,
-        clusters_path: FilePath,
         log_path: FilePath,
 ):
     num_trees = len(eval_trees)
@@ -54,20 +52,20 @@ def filter_tree_topologies(
     # sanity checks
     assert sum([len(s) for s in clusters]) <= num_trees
 
-    open(filtered_trees_path, "w").write("\n".join(unique_trees))
+    return unique_trees, clusters
 
-    with open(clusters_path, "wb") as f:
+
+if __name__ == "__main__":
+    eval_trees = [l.strip() for l in open(snakemake.input.all_eval_trees).readlines()]
+    log_file = snakemake.input.eval_trees_rfdistances_log
+
+    unique_trees, clusters = filter_tree_topologies(
+            eval_trees=eval_trees,
+            log_path=log_file,
+    )
+
+    with open(snakemake.output.filtered_trees, "w") as f:
+        f.write("\n".join(unique_trees))
+
+    with open(snakemake.output.clusters, "wb") as f:
         pickle.dump(clusters, f)
-
-
-eval_trees = [l.strip() for l in open(snakemake.input.all_eval_trees).readlines()]
-log_file = snakemake.input.eval_trees_rfdistances_log
-rfdists_file = snakemake.input.eval_trees_rfdistances
-clusters_path = snakemake.output.clusters
-
-filter_tree_topologies(
-        eval_trees=eval_trees,
-        filtered_trees_path=snakemake.output.filtered_trees,
-        clusters_path=clusters_path,
-        log_path=log_file,
-)

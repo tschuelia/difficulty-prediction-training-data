@@ -9,7 +9,6 @@ rule iqtree_filter_unique_tree_topologies:
     """
     input:
         all_eval_trees              = rules.collect_eval_trees.output.all_eval_trees,
-        eval_trees_rfdistances      = rules.raxmlng_rfdistance_eval_trees.output.rfDist,
         eval_trees_rfdistances_log  = rules.raxmlng_rfdistance_eval_trees.output.rfDist_log,
     output:
         filtered_trees  = f"{output_files_iqtree_dir}filteredEvalTrees.trees",

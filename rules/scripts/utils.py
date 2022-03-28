@@ -45,6 +45,11 @@ def get_multiple_values_from_file(
         if search_string in l:
             values.append(get_value_from_line(l, search_string))
 
+    if len(values) == 0:
+        raise ValueError(
+            f"The given input file {input_file} does not contain the search string '{search_string}'."
+        )
+
     return values
 
 

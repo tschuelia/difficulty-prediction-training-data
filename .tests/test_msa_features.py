@@ -1,33 +1,4 @@
-import os
-import pytest
-
-# unfortunately this is the way to go here since with snakemake I can't use relative imports (I think...)
-import sys
-
-sys.path.append(os.path.join(os.getcwd(), "rules/scripts"))
-
-from msa_features import MSA
-
-
-@pytest.fixture
-def dna_phylip_msa():
-    cwd = os.getcwd()
-    phylip_file = f"{cwd}/.tests/data/DNA/0.phy"
-    return MSA(phylip_file)
-
-
-@pytest.fixture
-def dna_fasta_msa():
-    cwd = os.getcwd()
-    fasta_file = f"{cwd}/.tests/data/DNA/0.fasta"
-    return MSA(fasta_file)
-
-
-@pytest.fixture
-def small_msa():
-    cwd = os.getcwd()
-    phylip_file = f"{cwd}/.tests/data/DNA/small.fasta"
-    return MSA(phylip_file)
+from fixtures import *
 
 
 class TestMSAFeatures:

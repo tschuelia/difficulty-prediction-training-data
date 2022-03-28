@@ -1,0 +1,322 @@
+IQ-TREE 2.1.3 COVID-edition built Oct  4 2021
+
+Input file name: /Users/julia/Desktop/Masterarbeit/Datasets/test-Datasets/DNA-Data/101/101.phy
+User tree file name: /Users/julia/Desktop/Promotion/DifficultyPrediction/training_data/empirical_data/101.phy/output_files/raxmlng/evaluation/BestEvalTree.tree
+Type of analysis: tree reconstruction
+Random seed number: 0
+
+REFERENCES
+----------
+
+To cite IQ-TREE please use:
+
+Bui Quang Minh, Heiko A. Schmidt, Olga Chernomor, Dominik Schrempf,
+Michael D. Woodhams, Arndt von Haeseler, and Robert Lanfear (2020)
+IQ-TREE 2: New models and efficient methods for phylogenetic inference
+in the genomic era. Mol. Biol. Evol., in press.
+https://doi.org/10.1093/molbev/msaa015
+
+SEQUENCE ALIGNMENT
+------------------
+
+Input data: 101 sequences with 1858 nucleotide sites
+Number of constant sites: 375 (= 20.183% of all sites)
+Number of invariant (constant or ambiguous constant) sites: 375 (= 20.183% of all sites)
+Number of parsimony informative sites: 1293
+Number of distinct site patterns: 1630
+
+SUBSTITUTION PROCESS
+--------------------
+
+Model of substitution: GTR+FO+G4
+
+Rate parameter R:
+
+  A-C: 1.1226
+  A-G: 2.2858
+  A-T: 1.2311
+  C-G: 0.9854
+  C-T: 3.8128
+  G-T: 1.0000
+
+State frequencies: (estimated with maximum likelihood)
+
+  pi(A) = 0.2536
+  pi(C) = 0.207
+  pi(G) = 0.2811
+  pi(T) = 0.2582
+
+Rate matrix Q:
+
+  A   -0.9373    0.1826    0.5049    0.2498
+  C    0.2237    -1.215    0.2177    0.7736
+  G    0.4555    0.1603   -0.8187    0.2029
+  T    0.2453    0.6203    0.2209    -1.086
+
+Model of rate heterogeneity: Gamma with 4 categories
+Gamma shape alpha: 0.413
+
+ Category  Relative_rate  Proportion
+  1         0.01863        0.25
+  2         0.1914         0.25
+  3         0.7449         0.25
+  4         3.045          0.25
+Relative rates are computed as MEAN of the portion of the Gamma distribution falling in the category.
+
+USER TREE
+---------
+
+Log-likelihood of the tree: -64734.6727 (s.e. 1364.1329)
+Unconstrained log-likelihood (without tree): -13275.2039
+Number of free parameters (#branches + #model parameters): 208
+Akaike information criterion (AIC) score: 129885.3454
+Corrected Akaike information criterion (AICc) score: 129938.0707
+Bayesian information criterion (BIC) score: 131035.0147
+
+Total tree length (sum of branch lengths): 33.3768
+Sum of internal branch lengths: 11.2654 (33.7521% of tree length)
+
+NOTE: Tree is UNROOTED although outgroup taxon 'Species218' is drawn at root
+
++---Species218
+|
+|     +--Species219
+|  +--|
+|  |  +--Species216
++--|
+|  +--Species031
+|
+|                         +---------------Species083
+|                   +-----|
+|                   |     |          +--Species094
+|                   |     +----------|
+|                   |                +----Species217
+|                +--|
+|                |  |            +-----------------Species010
+|                |  +------------|
+|                |               |     +-------------------Species011
+|                |               |  +--|
+|                |               |  |  +--------Species084
+|                |               +--|
+|                |                  |     +-----Species071
+|                |                  |  +--|
+|                |                  |  |  +------Species072
+|                |                  +--|
+|                |                     |   +--------Species066
+|                |                     +---|
+|                |                         +-----------------Species139
+|             +--|
+|             |  |         +--Species224
+|             |  |     +---|
+|             |  |     |   +--Species204
+|             |  +-----|
+|             |        +----Species130
++-------------|
+              |                   +--Species024
+              |          +--------|
+              |          |        |  +--Species059
+              |          |        +--|
+              |          |           +--Species220
+              |     +----|
+              |     |    +---------Species075
+              |  +--|
+              |  |  |  +--Species057
+              |  |  +--|
+              |  |     +-----------Species156
+              +--|
+                 |                                      +--Species036
+                 |                                   +--|
+                 |                                   |  +--Species039
+                 |                                +--|
+                 |                                |  +---Species000
+                 |                             +--|
+                 |                             |  +--Species133
+                 |                          +--|
+                 |                          |  |  +--Species112
+                 |                          |  +--|
+                 |                          |     +--Species017
+                 |                       +--|
+                 |                       |  +--Species045
+                 |                    +--|
+                 |                    |  +--Species035
+                 |                 +--|
+                 |                 |  |        +--Species062
+                 |                 |  |     +--|
+                 |                 |  |     |  +--Species152
+                 |                 |  |  +--|
+                 |                 |  |  |  +--Species148
+                 |                 |  +--|
+                 |                 |     |        +--Species002
+                 |                 |     |     +--|
+                 |                 |     |     |  |     +----Species153
+                 |                 |     |     |  |  +--|
+                 |                 |     |     |  |  |  +---------Species068
+                 |                 |     |     |  +--|
+                 |                 |     |     |     +--Species091
+                 |                 |     |  +--|
+                 |                 |     |  |  +--Species016
+                 |                 |     +--|
+                 |                 |        |                          +--Species203
+                 |                 |        |                       +--|
+                 |                 |        |                       |  |  +--Species129
+                 |                 |        |                       |  +--|
+                 |                 |        |                       |     +--Species185
+                 |                 |        |                    +--|
+                 |                 |        |                    |  +--Species098
+                 |                 |        |                 +--|
+                 |                 |        |                 |  +--Species200
+                 |                 |        |              +--|
+                 |                 |        |              |  |    +--Species128
+                 |                 |        |              |  +----|
+                 |                 |        |              |       +--Species127
+                 |                 |        |           +--|
+                 |                 |        |           |  +--Species015
+                 |                 |        |        +--|
+                 |                 |        |        |  |  +--Species118
+                 |                 |        |        |  +--|
+                 |                 |        |        |     +--Species181
+                 |                 |        |     +--|
+                 |                 |        |     |  +--Species114
+                 |                 |        |  +--|
+                 |                 |        |  |  |     +--Species005
+                 |                 |        |  |  |  +--|
+                 |                 |        |  |  |  |  +--Species058
+                 |                 |        |  |  +--|
+                 |                 |        |  |     |     +--Species198
+                 |                 |        |  |     |  +--|
+                 |                 |        |  |     |  |  |  +--Species102
+                 |                 |        |  |     |  |  +--|
+                 |                 |        |  |     |  |     +--Species170
+                 |                 |        |  |     +--|
+                 |                 |        |  |        +--Species055
+                 |                 |        +--|
+                 |                 |           |                 +--Species184
+                 |                 |           |              +--|
+                 |                 |           |              |  |  +--Species177
+                 |                 |           |              |  +--|
+                 |                 |           |              |     +--Species134
+                 |                 |           |           +--|
+                 |                 |           |           |  |     +--Species052
+                 |                 |           |           |  |  +--|
+                 |                 |           |           |  |  |  +--Species042
+                 |                 |           |           |  +--|
+                 |                 |           |           |     +--Species074
+                 |                 |           |        +--|
+                 |                 |           |        |  +--Species183
+                 |                 |           |     +--|
+                 |                 |           |     |  |  +--Species125
+                 |                 |           |     |  +--|
+                 |                 |           |     |     +--Species232
+                 |                 |           |  +--|
+                 |                 |           |  |  +--Species122
+                 |                 |           +--|
+                 |                 |              +--Species191
+                 |              +--|
+                 |              |  |     +--Species085
+                 |              |  |  +--|
+                 |              |  |  |  +--Species051
+                 |              |  +--|
+                 |              |     |  +--Species087
+                 |              |     +--|
+                 |              |        +--Species176
+                 |           +--|
+                 |           |  |        +--Species145
+                 |           |  |     +--|
+                 |           |  |     |  +--Species080
+                 |           |  |  +--|
+                 |           |  |  |  +--Species166
+                 |           |  +--|
+                 |           |     +--Species199
+                 |        +--|
+                 |        |  |        +--Species049
+                 |        |  |     +--|
+                 |        |  |     |  |  +--Species210
+                 |        |  |     |  +--|
+                 |        |  |     |     +--Species021
+                 |        |  |  +--|
+                 |        |  |  |  |     +--Species009
+                 |        |  |  |  |  +--|
+                 |        |  |  |  |  |  +--Species169
+                 |        |  |  |  +--|
+                 |        |  |  |     +--Species088
+                 |        |  +--|
+                 |        |     |     +--Species044
+                 |        |     |  +--|
+                 |        |     |  |  +--Species147
+                 |        |     +--|
+                 |        |        +--Species141
+                 |     +--|
+                 |     |  |                 +--Species206
+                 |     |  |              +--|
+                 |     |  |              |  +--Species189
+                 |     |  |           +--|
+                 |     |  |           |  +--Species079
+                 |     |  |        +--|
+                 |     |  |        |  +--Species140
+                 |     |  |     +--|
+                 |     |  |     |  +--Species001
+                 |     |  |  +--|
+                 |     |  |  |  +--Species029
+                 |     |  +--|
+                 |     |     |  +----Species168
+                 |     |     +--|
+                 |     |        +--Species108
+                 |  +--|
+                 |  |  |     +--Species037
+                 |  |  |  +--|
+                 |  |  |  |  |     +--Species143
+                 |  |  |  |  |  +--|
+                 |  |  |  |  |  |  +--Species076
+                 |  |  |  |  +--|
+                 |  |  |  |     |     +--Species033
+                 |  |  |  |     |  +--|
+                 |  |  |  |     |  |  +--Species093
+                 |  |  |  |     +--|
+                 |  |  |  |        +--Species208
+                 |  |  +--|
+                 |  |     +--Species163
+                 +--|
+                    |  +--Species089
+                    +--|
+                       +--Species115
+
+Tree in newick format:
+
+(Species218:0.3576747021,((Species219:0.0812035663,Species216:0.1288957517):0.0321610248,Species031:0.1446422065):0.1985267313,((((Species083:1.3887367652,(Species094:0.1873390107,Species217:0.4270714784):0.9532947912):0.5679760712,(Species010:1.5158281249,((Species011:1.7208829292,Species084:0.7889330465):0.2535064319,((Species071:0.5347945022,Species072:0.6078523771):0.2740376783,(Species066:0.7602178684,Species139:1.5455430111):0.3869927865):0.3245965145):0.2870650573):1.1003622615):0.0372222203,((Species224:0.1487461582,Species204:0.0330040948):0.4050596333,Species130:0.4882806177):0.5737462812):0.0985045147,((((Species024:0.0450592357,(Species059:0.1078992688,Species220:0.0945761489):0.0547121292):0.7545166226,Species075:0.8635506983):0.4952536021,(Species057:0.3299044240,Species156:1.0231391680):0.1052413864):0.0365852183,(((((((((((((Species036:0.0691845361,Species039:0.0247202384):0.0225239435,Species000:0.3510251650):0.0226937234,Species133:0.0540563527):0.0215309212,(Species112:0.0359597291,Species017:0.0703117634):0.0221284311):0.0061216105,Species045:0.0276048570):0.0101527922,Species035:0.0697459296):0.0503780606,(((Species062:0.0194709318,Species152:0.0319669560):0.0496246130,Species148:0.0587509194):0.0660343354,(((Species002:0.1089633218,((Species153:0.4691515765,Species068:0.8656316305):0.1036692573,Species091:0.1559379153):0.0306353922):0.0376323728,Species016:0.1005375396):0.0102083475,(((((((((Species203:0.1157068714,(Species129:0.0604469513,Species185:0.1703716517):0.0066458914):0.0259851169,Species098:0.1364578549):0.0125071573,Species200:0.1056887844):0.1116295509,(Species128:0.1755671867,Species127:0.2575402704):0.4409534315):0.0406651531,Species015:0.0649954778):0.0239347066,(Species118:0.0950012655,Species181:0.0583748241):0.0169682333):0.0050325299,Species114:0.1093323753):0.0182261010,((Species005:0.0494283150,Species058:0.0278225720):0.0524331525,((Species198:0.3157659677,(Species102:0.0582922796,Species170:0.1228496206):0.0191518832):0.0067975484,Species055:0.0425804783):0.0129277137):0.0059958407):0.0163654975,((((((Species184:0.0418581067,(Species177:0.0619830372,Species134:0.1015961582):0.0152644968):0.0124532341,((Species052:0.0300704314,Species042:0.0391810077):0.0111917586,Species074:0.0715953911):0.0320445640):0.0136731244,Species183:0.0619567951):0.0098381695,(Species125:0.1597707339,Species232:0.1600474158):0.0452813997):0.0144929934,Species122:0.0322820838):0.0139839470,Species191:0.0372130369):0.0250419255):0.0182728423):0.0096807296):0.0100138621):0.0022283557,((Species085:0.0214524410,Species051:0.0400544174):0.0445566814,(Species087:0.0379395149,Species176:0.0526062308):0.0682370021):0.0172563059):0.0200889682,(((Species145:0.0402705369,Species080:0.0851553943):0.2844677777,Species166:0.1364204128):0.0250702863,Species199:0.0715719213):0.0494175662):0.0163262239,(((Species049:0.0826490470,(Species210:0.0732688492,Species021:0.1619499760):0.0209120302):0.0315738529,((Species009:0.0807847652,Species169:0.0181510890):0.0027726690,Species088:0.0193770770):0.0425483102):0.0206765750,((Species044:0.0826050629,Species147:0.1434914317):0.0306902650,Species141:0.0906338543):0.0854549197):0.0572996408):0.0096862985,((((((Species206:0.0284857262,Species189:0.1111912504):0.0514059001,Species079:0.0885557589):0.0067947314,Species140:0.0985229609):0.0178388418,Species001:0.1065873465):0.0158957591,Species029:0.1924700403):0.0109683651,(Species168:0.4300649843,Species108:0.0912159169):0.0129473951):0.0393371077):0.0383467363,((Species037:0.2130019610,((Species143:0.0886796718,Species076:0.0866158533):0.0307851756,((Species033:0.0477338112,Species093:0.0877385320):0.0149614576,Species208:0.0673256562):0.0142257553):0.0236114138):0.0439907559,Species163:0.2381567952):0.0156588943):0.0621794594,(Species089:0.1210058918,Species115:0.1750940188):0.2012633881):0.0516202361):0.1006611993):1.2434483817);
+
+
+USER TREES
+----------
+
+See /Users/julia/Desktop/Promotion/DifficultyPrediction/training_data/empirical_data/101.phy/output_files/iqtree/significance.trees for trees with branch lengths.
+
+Tree      logL    deltaL  bp-RELL    p-KH     p-SH    p-WKH    p-WSH       c-ELW       p-AU
+-------------------------------------------------------------------------------------------
+  1 -64759.70074  25.028  0.0503 +  0.185 +  0.268 +  0.185 +  0.516 +    0.0502 +    0.262 + 
+  2 -64734.67254       0   0.377 +  0.556 +      1 +  0.556 +  0.866 +     0.377 +    0.699 + 
+  3 -64759.37096  24.698  0.0706 +  0.191 +  0.289 +  0.191 +  0.495 +    0.0709 +    0.274 + 
+  4 -64759.72951  25.057  0.0819 +  0.189 +  0.297 +  0.189 +  0.432 +    0.0814 +     0.25 + 
+  5 -64759.69538  25.023   0.025 -  0.176 +  0.266 +  0.176 +  0.577 +    0.0249 -    0.258 + 
+  6 -64761.00172  26.329  0.0253 +  0.156 +  0.262 +  0.156 +  0.457 +    0.0259 +    0.202 + 
+  7 -64736.01646  1.3439   0.369 +  0.444 +  0.732 +  0.444 +  0.713 +      0.37 +    0.564 + 
+
+deltaL  : logL difference from the maximal logl in the set.
+bp-RELL : bootstrap proportion using RELL method (Kishino et al. 1990).
+p-KH    : p-value of one sided Kishino-Hasegawa test (1989).
+p-SH    : p-value of Shimodaira-Hasegawa test (2000).
+p-WKH   : p-value of weighted KH test.
+p-WSH   : p-value of weighted SH test.
+c-ELW   : Expected Likelihood Weight (Strimmer & Rambaut 2002).
+p-AU    : p-value of approximately unbiased (AU) test (Shimodaira, 2002).
+
+Plus signs denote the 95% confidence sets.
+Minus signs denote significant exclusion.
+All tests performed 10000 resamplings using the RELL method.
+
+TIME STAMP
+----------
+
+Date and time: Mon Jan 24 10:14:32 2022
+Total CPU time used: 3.23 seconds (0h:0m:3s)
+Total wall-clock time used: 3.59 seconds (0h:0m:3s)
+

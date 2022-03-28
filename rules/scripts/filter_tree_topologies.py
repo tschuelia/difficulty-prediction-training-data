@@ -26,7 +26,6 @@ def get_rfdist_clusters(log_path, all_trees):
     return clusters
 
 
-
 def filter_tree_topologies(
         eval_trees: List[Newick],
         log_path: FilePath,

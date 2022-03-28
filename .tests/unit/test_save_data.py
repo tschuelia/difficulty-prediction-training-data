@@ -30,12 +30,12 @@ def test_save_data():
         sp.check_output([
             "python",
             "-m",
-            "snakemake", 
+            "snakemake",
             "results/12540_3.phy/data.sqlite3",
-            "-F", 
+            "-F",
             "-j1",
             "--keep-target-files",
-    
+
             "--directory",
             workdir,
         ])

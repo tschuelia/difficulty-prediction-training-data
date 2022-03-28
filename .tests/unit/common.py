@@ -93,7 +93,7 @@ class NewickTreeChecker(OutputChecker):
         generated_branch_lenths.sort()
         expected_branch_lenths.sort()
 
-        assert all([gen == pytest.approx(exp, 0.1) for gen, exp in zip(generated_branch_lenths, expected_branch_lenths)])
+        assert all([gen == pytest.approx(exp, abs=0.01) for gen, exp in zip(generated_branch_lenths, expected_branch_lenths)])
 
     def compare_files(self, generated_file, expected_file):
         generated_trees = [l.strip() for l in open(generated_file).readlines() if l]
@@ -128,7 +128,7 @@ class RAxMLNGLogChecker(OutputChecker):
             generated_llhs = get_all_raxmlng_llhs(generated_file)
             expected_llhs = get_all_raxmlng_llhs(expected_file)
 
-            assert all([gen == pytest.approx(exp, 0.1) for gen, exp in zip(generated_llhs, expected_llhs)])
+            assert all([gen == pytest.approx(exp, abs=0.1) for gen, exp in zip(generated_llhs, expected_llhs)])
 
         generated_pars_score = get_all_parsimony_scores(generated_file)
         expected_pars_score = get_all_parsimony_scores(expected_file)

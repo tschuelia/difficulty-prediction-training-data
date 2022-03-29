@@ -31,12 +31,13 @@ class MSA:
     def _convert_dna_msa_to_biopython_format(self, tmpfile: NamedTemporaryFile) -> None:
         """
         The unknonwn char in DNA MSA files for Biopython to work
-        has to be "N" instead of "X" -> replace all occurences
+        has to be "-" instead of "X" or "N" -> replace all occurences
         All "?" are gaps -> convert to "-"
         Also all "U" need to be "T"
         """
         with open(self.msa_file) as f:
-            repl = f.read().replace("X", "N")
+            repl = f.read().replace("X", "-")
+            repl = repl.replace("N", "-")
             repl = repl.replace("?", "-")
             repl = repl.replace("U", "T")
             repl = repl.upper()

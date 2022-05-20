@@ -1,8 +1,8 @@
 .idea
 .snakemake
-data
 .DS_Store
 software/
+results/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

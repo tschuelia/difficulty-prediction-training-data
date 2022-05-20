@@ -1,0 +1,20 @@
+msa_paths: [
+   12540_3.phy
+]
+outdir: "results/"
+
+# provide the paths to the RAxML-NG, IQ-Tree, and Parsimonator executables here
+software:
+  raxml-ng:
+    command: "/Users/julia/Desktop/Promotion/software/raxml-ng/bin/raxml-ng" # https://github.com/tschuelia/raxml-ng
+    model: GTR+G
+  iqtree:
+    command: "/Users/julia/Desktop/Promotion/software/iqtree-2.1.3-MacOSX/bin/iqtree2" # http://www.iqtree.org
+    model: GTR+FO+G4
+    threads: 2
+
+# these variables are used for coding and debugging, we do not recommend changing them
+_debug:
+  _num_pars_trees: 1
+  _num_rand_trees: 1
+  _num_parsimony_trees: 2

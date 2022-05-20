@@ -46,3 +46,10 @@ def test_iqtree_significance_tests_on_eval_trees():
         # and overwrite the method `compare_files(generated_file, expected_file), 
         # also see common.py.
         common.IQTreeSignificanceTestChecker(data_path, expected_path, workdir).check()
+<<<<<<< HEAD
+=======
+
+        # TODO: change the behaviour: instead of comparing it byte by byte we want to check
+        # - if .iqtree contains the same test results
+        # - if .iqtree.log contains the correct function call
+>>>>>>> raxmlgrove

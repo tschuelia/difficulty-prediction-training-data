@@ -5,7 +5,7 @@ import uuid
 
 from database import *
 from iqtree_statstest_parser import get_iqtree_results, get_iqtree_results_for_eval_tree_str
-from raxml_parser import (
+from raxmlng_parser import (
     get_raxmlng_rel_rf_distance,
     get_raxmlng_num_unique_topos,
     get_all_raxmlng_llhs,
@@ -19,15 +19,15 @@ from raxml_parser import (
     get_raxmlng_runtimes
 )
 
-from parsimonator_parser import get_all_parsimonator_parsimony_scores, get_all_parsimonator_runtimes
-
 from tree_metrics import (
     get_total_branch_length_for_tree,
     get_min_branch_length_for_tree,
     get_max_branch_length_for_tree,
-    get_std_branch_lenghts_for_tree,
-    get_avg_branch_lenghts_for_tree,
+    get_std_branch_lengths_for_tree,
+    get_avg_branch_lengths_for_tree,
 )
+
+from msa_features import MSA
 
 db.init(snakemake.output.database)
 db.connect()
@@ -40,7 +40,6 @@ db.create_tables(
 )
 dataset_name = snakemake.wildcards.msa
 raxmlng_command = snakemake.params.raxmlng_command
-data_type = snakemake.params.data_type
 
 # tree search
 pars_search_trees = snakemake.input.pars_search_trees
@@ -78,14 +77,11 @@ parsimony_rfdistance = snakemake.input.parsimony_rfdistance
 llhs_search = get_all_raxmlng_llhs(search_logs_collected)
 llhs_eval = get_all_raxmlng_llhs(eval_logs_collected)
 
-if data_type == "DNA":
-    parsimony_scores = get_all_parsimonator_parsimony_scores(parsimony_logs)
-    parsimony_runtimes = get_all_parsimonator_runtimes(parsimony_logs)
-else:
-    parsimony_scores = get_all_parsimony_scores(parsimony_logs)
-    parsimony_runtimes = get_raxmlng_runtimes(parsimony_logs)
+parsimony_scores = get_all_parsimony_scores(parsimony_logs)
+parsimony_runtimes = get_raxmlng_runtimes(parsimony_logs)
 
 num_searches = len(pars_search_trees) + len(rand_search_trees)
+data_type = MSA(snakemake.params.msa).guess_data_type()
 
 # for the starting tree features, we simply take the first parsimony tree inference
 single_tree = pars_search_trees[0]
@@ -136,8 +132,8 @@ dataset_dbobj = Dataset.create(
     rate_heterogeneity_final        = rate_het,
     eq_frequencies_final            = base_freq,
     substitution_rates_final        = subst_rates,
-    average_branch_length_final     = get_avg_branch_lenghts_for_tree(newick_final),
-    std_branch_length_final         = get_std_branch_lenghts_for_tree(newick_final),
+    average_branch_length_final     = get_avg_branch_lengths_for_tree(newick_final),
+    std_branch_length_final         = get_std_branch_lengths_for_tree(newick_final),
     total_branch_length_final       = get_total_branch_length_for_tree(newick_final),
     minimum_branch_length_final     = get_min_branch_length_for_tree(newick_final),
     maximum_branch_length_final     = get_max_branch_length_for_tree(newick_final),
@@ -147,7 +143,7 @@ dataset_dbobj = Dataset.create(
     # MSA Features
     num_taxa                = msa_features["taxa"],
     num_sites               = msa_features["sites"],
-    num_patters             = msa_features["patterns"],
+    num_patterns            = msa_features["patterns"],
     proportion_gaps         = msa_features["gaps"],
     proportion_invariant    = msa_features["invariant"],
     entropy                 = msa_features["entropy"],

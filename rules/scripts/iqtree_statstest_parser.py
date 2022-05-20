@@ -29,7 +29,7 @@ START_STRING = "USER TREES"
 END_STRING = "TIME STAMP"
 
 
-def _get_relevant_section(input_file):
+def get_relevant_section(input_file):
     """
     Returns the content of input_file between START_STRING and END_STRING.
 
@@ -64,7 +64,7 @@ def _get_relevant_section(input_file):
     return content[start:end]
 
 
-def _get_names_of_performed_tests(table_section):
+def get_names_of_performed_tests(table_section):
     """
     Returns the names of the performed iqtree tests as stated in the table header.
 
@@ -83,7 +83,7 @@ def _get_names_of_performed_tests(table_section):
         line = line.strip()
         m = regex.match(table_header_re, line)
         if m:
-            # m captures 2 groups: the first is Tree, logL, deltaL, the second are the tests
+            # m captures 2 groups: the first is (Tree, logL, deltaL), the second are the tests
             test_names = m.captures(1)
 
     if not test_names:
@@ -93,7 +93,7 @@ def _get_names_of_performed_tests(table_section):
     return test_names
 
 
-def _get_cleaned_table_entries(
+def get_cleaned_table_entries(
     table_section):
     """
     Returns the content of the table in the given section.
@@ -117,7 +117,7 @@ def _get_cleaned_table_entries(
             tree_id, llh, deltaL, result_group = m.groups()
             # to capture all test results individually we have to explicitly unpack it
             test_results = m.captures(4)
-            entry = (tree_id, llh, deltaL, test_results)
+            entry = (int(tree_id), float(llh), float(deltaL), test_results)
             entries.append(entry)
 
     if not entries:
@@ -176,10 +176,10 @@ def get_iqtree_results(iqtree_file):
         A list of dicts. Each dict contains the tree_id, llh, deltaL and all results of the performed
             iqtree tests.
     """
+    section = get_relevant_section(iqtree_file)
     try:
-        section = _get_relevant_section(iqtree_file)
-        entries = _get_cleaned_table_entries(section)
-        test_names = _get_names_of_performed_tests(section)
+        entries = get_cleaned_table_entries(section)
+        test_names = get_names_of_performed_tests(section)
     except ValueError as e:
         warnings.warn(str(e))
         warnings.warn("Falling back to default case.")
@@ -191,8 +191,8 @@ def get_iqtree_results(iqtree_file):
         assert len(test_names) == len(test_results)
 
         data = {}
-        data["logL"] = float(llh)
-        data["deltaL"] = float(deltaL)
+        data["logL"] = llh
+        data["deltaL"] = deltaL
         data["tests"] = {}
 
         num_passed = 0

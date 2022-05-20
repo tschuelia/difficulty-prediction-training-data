@@ -38,9 +38,21 @@ rule save_data:
         parsimony_rfdistance = f"{output_files_parsimony_trees}parsimony.raxml.rfDistances.log",
     output:
         database = f"{db_path}data.sqlite3"
-
     params:
         raxmlng_command = raxmlng_command,
-        data_type = data_type
+        msa             = lambda wildcards: msas[wildcards.msa],
     script:
         "scripts/save_data.py"
+
+
+rule database_to_training_dataframe:
+    input:
+        database = rules.save_data.output.database,
+    output:
+        dataframe = f"{db_path}training_data.parquet"
+    params:
+        num_pars_trees = num_pars_trees,
+        num_rand_trees = num_rand_trees,
+        num_parsimony_trees = num_parsimony_trees
+    script:
+        "scripts/database_to_dataframe.py"

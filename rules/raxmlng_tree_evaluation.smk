@@ -1,5 +1,3 @@
-threads = config["software"]["raxml-ng"]["threads"]
-
 rule reevaluate_raxml_pars_tree:
     """
     Rule that re-evaluates the given parsimony search tree.
@@ -23,7 +21,6 @@ rule reevaluate_raxml_pars_tree:
         "--msa {params.msa} "
         "--model {params.model} "
         "--prefix {params.prefix} "
-        "--threads {threads} "
         "--seed 0 "
         "> {output.eval_log} "
 
@@ -51,6 +48,5 @@ rule reevaluate_raxml_rand_tree:
         "--msa {params.msa} "
         "--model {params.model} "
         "--prefix {params.prefix} "
-        "--threads {threads} "
         "--seed 0 "
         "> {output.eval_log} "

@@ -2,6 +2,8 @@ import sqlite3
 import pandas as pd
 import numpy as np
 
+from custom_types import *
+
 
 def get_difficulty_labels(df: pd.DataFrame) -> List[float]:
     """
@@ -19,22 +21,22 @@ def get_difficulty_labels(df: pd.DataFrame) -> List[float]:
         for col in [
             "avg_rfdist_eval",
             "avg_rfdist_plausible",
-            "num_topos_search/num_trees_search",
             "num_topos_eval/num_trees_eval",
-            "num_topos_plausible/num_trees_plausible",
         ]:
             if (row[col] > -np.inf) and (row[col] < np.inf) and (row[col] is not None):
                 diff_proba += row[col]
                 ct += 1
 
-        if (
-            (row.proportion_plausible > -np.inf)
-            and (row.proportion_plausible < np.inf)
-            and (row.proportion_plausible is not None)
-        ):
-            diff_proba += 1 - row.proportion_plausible
-            ct += 1
-
+        for col in [
+            "proportion_plausible"
+        ]:
+            if (
+                    (row[col] > -np.inf)
+                    and (row[col] < np.inf)
+                    and (row[col] is not None)
+            ):
+                diff_proba += 1 - row[col]
+                ct += 1
         labels.append(diff_proba / ct)
 
     return labels

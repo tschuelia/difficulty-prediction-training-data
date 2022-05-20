@@ -11,4 +11,5 @@ dependencies:
   - openssl
   - pip
     - peewee
-    -  biopython
+    - biopython
+    - treelite

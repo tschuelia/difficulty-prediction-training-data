@@ -1,0 +1,2 @@
+((Phytophthora_ramorum_NA2:0.002272,(Phytophthora_ramorum_EU1:0.000001,Phytophthora_ramorum_NA1:0.000001):0.001127):0.001155,(Phytophthora_hibernalis:0.060709,Phytophthora_lateralis:0.071413):0.011648,Phytophthora_ramorum_EU2:0.001152);
+((Phytophthora_ramorum_NA2:0.002272,((Phytophthora_hibernalis:0.060755,Phytophthora_lateralis:0.071450):0.011622,Phytophthora_ramorum_EU2:0.001152):0.001155):0.001127,Phytophthora_ramorum_NA1:0.000001,Phytophthora_ramorum_EU1:0.000001);

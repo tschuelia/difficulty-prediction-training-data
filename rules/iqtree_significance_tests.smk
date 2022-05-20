@@ -32,7 +32,7 @@ rule iqtree_significance_tests_on_eval_trees:
     params:
         msa     = lambda wildcards: msas[wildcards.msa],
         prefix  = f"{output_files_iqtree_dir}significance",
-        model   = lambda wildcards: iqtree_model[wildcards.msa] if partitioned else iqtree_model,
+        model   = lambda wildcards: iqtree_models[wildcards.msa],
         model_str = "-p" if partitioned else "-m",
         threads = config["software"]["iqtree"]["threads"]
     log:

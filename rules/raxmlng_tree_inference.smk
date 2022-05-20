@@ -10,7 +10,8 @@ rule raxmlng_pars_tree:
     params:
         prefix  = raxmlng_tree_inference_prefix_pars,
         msa     = lambda wildcards: msas[wildcards.msa],
-        model   = lambda wildcards: raxmlng_model[wildcards.msa] if partitioned else raxmlng_model
+        model   = lambda wildcards: raxmlng_models[wildcards.msa],
+        threads = config["software"]["raxml-ng"]["threads"]
     log:
         f"{raxmlng_tree_inference_prefix_pars}.snakelog",
     shell:
@@ -19,6 +20,7 @@ rule raxmlng_pars_tree:
         "--model {params.model} "
         "--prefix {params.prefix} "
         "--seed {wildcards.seed} "
+        "--threads {params.threads} "
         "--tree pars{{1}} "
         "> {output.raxml_log} "
 
@@ -34,7 +36,8 @@ rule raxmlng_rand_tree:
     params:
         prefix  = raxmlng_tree_inference_prefix_rand,
         msa     = lambda wildcards: msas[wildcards.msa],
-        model   = lambda wildcards: raxmlng_model[wildcards.msa] if partitioned else raxmlng_model
+        model   = lambda wildcards: raxmlng_models[wildcards.msa],
+        threads = config["software"]["raxml-ng"]["threads"]
     log:
         f"{raxmlng_tree_inference_prefix_rand}.snakelog",
     shell:
@@ -43,5 +46,6 @@ rule raxmlng_rand_tree:
         "--model {params.model} "
         "--prefix {params.prefix} "
         "--seed {wildcards.seed} "
+        "--threads {params.threads} "
         "--tree rand{{1}} "
         "> {output.raxml_log} "

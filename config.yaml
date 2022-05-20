@@ -24,10 +24,9 @@ outdir: results/
 software:
   raxml-ng:
     command: path/to/raxml-ng # https://github.com/tschuelia/raxml-ng
-    model: GTR+G
+    threads: 2
   iqtree:
     command: path/to/iqtree # http://www.iqtree.org
-    model: GTR+G4+FO
     threads: 2
 
 _debug:

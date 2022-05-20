@@ -5,7 +5,7 @@ rule parsimony_tree:
     params:
         msa     = lambda wildcards: msas[wildcards.msa],
         prefix  = output_files_parsimony_trees + "seed_{seed}",
-        model   = lambda wildcards: raxmlng_model[wildcards.msa] if partitioned else raxmlng_model
+        model   = lambda wildcards: raxmlng_models[wildcards.msa]
 
     run:
         # Use RAxML-NG

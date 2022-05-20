@@ -1,4 +1,8 @@
 import os
+import sys
+
+sys.path.append("rules/scripts")
+from msa_features import MSA
 
 configfile: "config.yaml"
 
@@ -19,9 +23,6 @@ msa_paths = config["msa_paths"]
 part_paths = []
 partitioned = False
 
-raxmlng_model = config["software"]["raxml-ng"]["model"]
-iqtree_model = config["software"]["iqtree"]["model"]
-
 if isinstance(msa_paths[0], list):
     # in this case the MSAs are partitioned
     msa_paths, part_paths = zip(*msa_paths)
@@ -32,8 +33,20 @@ msa_names = [os.path.split(pth)[1] for pth in msa_paths]
 
 if partitioned:
     models = dict(list(zip(msa_names, part_paths)))
-    raxmlng_model = models
-    iqtree_model = models
+    raxmlng_models = models
+    iqtree_models = models
+else:
+    # infer the data type for each MSA
+    raxmlng_models = []
+    iqtree_models = []
+    for msa, name in zip(msa_paths, msa_names):
+        m = MSA(msa)
+        raxmlng_models.append((name, "GTR+G" if m.data_type == "DNA" else "LG+G"))
+        iqtree_models.append((name, "GTR+G4+FO" if m.data_type == "DNA" else "LG+G4+FO"))
+
+    raxmlng_models = dict(raxmlng_models)
+    iqtree_models = dict(iqtree_models)
+
 
 msas = dict(zip(msa_names, msa_paths))
 

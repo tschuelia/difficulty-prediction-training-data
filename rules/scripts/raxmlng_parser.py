@@ -1,6 +1,8 @@
+import numpy as np
 import regex
 from tempfile import TemporaryDirectory
 import subprocess
+import warnings
 
 from custom_types import *
 from utils import (
@@ -65,7 +67,11 @@ def get_raxmlng_starting_llh(raxmlng_file: FilePath) -> float:
         _, llh = numbers.split(" ")
         return float(llh)
 
-    raise ValueError("The given file does not contain the starting llh")
+    # if the run was restarted, the starting LLH is not in the log file anymore
+    # since I am not using this feature at the moment, we ignore it in this case
+    # = raise a warning and return negative infinity
+    warnings.warn("The given file does not contain the starting llh " + raxmlng_file)
+    return -np.inf
 
 
 def get_all_raxmlng_llhs(raxmlng_file: FilePath) -> List[float]:
@@ -234,6 +240,6 @@ def get_patterns_gaps_invariant(log_file: FilePath) -> Tuple[int, float, float]:
             invariant = float(percentage) / 100.0
 
     if patterns is None or gaps is None or invariant is None:
-        raise ValueError("Error parsing raxml-ng log")
+        raise ValueError("Error parsing raxml-ng log ", log_file)
 
     return patterns, gaps, invariant

@@ -37,7 +37,7 @@ rule save_data:
         parsimony_logs = f"{output_files_parsimony_trees}AllParsimonyLogs.log",
         parsimony_rfdistance = f"{output_files_parsimony_trees}parsimony.raxml.rfDistances.log",
     output:
-        database = f"{db_path}data.sqlite3"
+        database = "{msa}_data.sqlite3"
     params:
         raxmlng_command = raxmlng_command,
         msa             = lambda wildcards: msas[wildcards.msa],
@@ -45,9 +45,20 @@ rule save_data:
         "scripts/save_data.py"
 
 
+rule move_db:
+    # due to an issue with our lab webservers, I cannot directly create the database on the mounted fs
+    # therefore I creat it in the current workdir and then move it to the mounted fs
+    input:
+        "{msa}_data.sqlite3"
+    output:
+        database = f"{db_path}data.sqlite3"
+    shell:
+        "mv {input} {output}"
+
+
 rule database_to_training_dataframe:
     input:
-        database = rules.save_data.output.database,
+        database = rules.move_db.output.database,
     output:
         dataframe = f"{db_path}training_data.parquet"
     params:

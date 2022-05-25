@@ -5,13 +5,13 @@ msa_paths: [
    path/to/msa1.phy,
 ]
 
-# to use partitioned MSAs, provide a link to the partition file for each MSA
-# the partition file should be in a RAxML-NG and IQ-Tree compatible format
+# to use partitioned MSAs, provide a link to the partition file for each MSA,
+# the first in RAxML-NG compatible format, the second in IQ-Tree compatible format
 # note that the MSA features will be computed for the entire alignment
 # In this case, the msa_paths list should be a list of lists:
 # msa_paths: [
-#    [/path/to/msa1, /path/to/msa1.part],
-#    /path/to/msa2, /path/to/msa2.part],
+#    [/path/to/msa1, /path/to/msa1.part.ng, /path/to/msa1.part.iqt],
+#    /path/to/msa2, /path/to/msa2.part.ng, /path/to/msa2.part.iqt],
 #    ...
 # ]
 

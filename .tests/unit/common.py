@@ -13,6 +13,7 @@ import yaml
 import pandas as pd
 import pickle
 import sqlite3
+import json
 
 import sys
 
@@ -220,7 +221,11 @@ class PandasDataFrameChecker(OutputChecker):
         generated_df = pd.read_parquet(generated_file).drop("uuid", axis=1)
         expected_df = pd.read_parquet(expected_file).drop("uuid", axis=1)
 
-        pd.testing.assert_frame_equal(generated_df, expected_df)
+        assert set(generated_df.columns) == set(expected_df.columns)
+
+        columns_to_compare = [col for col in generated_df.columns if col != "difficult"]
+
+        pd.testing.assert_frame_equal(generated_df[columns_to_compare], expected_df[columns_to_compare])
 
 
 class IQTreeSignificanceTestChecker(OutputChecker):
@@ -295,3 +300,16 @@ class DatabaseChecker(OutputChecker):
 
                 assert generated.shape == expected.shape
                 assert generated.columns.tolist().sort() == expected.columns.tolist().sort()
+
+
+class MSAFeatureChecker(OutputChecker):
+    def compare_files(self, generated_file, expected_file):
+        if generated_file.suffix == ".json":
+            gen_json = json.load(open(generated_file))
+            exp_json = json.load(open(expected_file))
+
+            assert gen_json.keys() == exp_json.keys()
+
+            for k, gen_v in gen_json.items():
+                exp_v = exp_json.get(k)
+                assert gen_v == exp_v

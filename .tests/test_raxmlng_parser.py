@@ -25,7 +25,7 @@ def test_get_raxmlng_starting_llh(raxmlng_inference_log):
 
 
 def test_get_raxmlng_starting_llh_raises_value_error(raxmlng_rfdistance_log):
-    with pytest.raises(ValueError):
+    with pytest.warns(Warning):
         get_raxmlng_starting_llh(raxmlng_rfdistance_log)
 
 

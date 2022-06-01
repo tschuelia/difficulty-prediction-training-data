@@ -40,4 +40,4 @@ def test_compute_msa_features():
             workdir,
         ])
 
-        common.OutputChecker(data_path, expected_path, workdir).check()
+        common.MSAFeatureChecker(data_path, expected_path, workdir).check()

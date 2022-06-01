@@ -44,13 +44,3 @@ def test_get_multiple_values_from_file_raises_value_error_if_string_not_in_file(
     with pytest.raises(ValueError):
         get_multiple_values_from_file(raxmlng_multiple_logs, "bananans")
 
-
-def test_run_cmd():
-    cmd = ["ls"]
-    run_cmd(cmd)
-
-
-def test_run_cmd_raises_exception_on_wrong_cmd():
-    cmd = ["not", "a", "valid", "command"]
-    with pytest.raises(Exception):
-        run_cmd(cmd)

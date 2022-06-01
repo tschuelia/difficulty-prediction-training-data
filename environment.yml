@@ -10,7 +10,8 @@ dependencies:
   - certifi
   - openssl
   - pandas
+  - peewee
+  - biopython
+  - treelite
   - pip
-    - peewee
-    - biopython
-    - treelite
+    - git+https://github.com/tschuelia/PyPhyPred.git

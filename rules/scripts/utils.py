@@ -1,5 +1,3 @@
-import subprocess
-
 from custom_types import *
 
 
@@ -51,11 +49,3 @@ def get_multiple_values_from_file(
         )
 
     return values
-
-
-def run_cmd(cmd: Command) -> None:
-    try:
-        subprocess.check_output(cmd)
-    except Exception as e:
-        print(f"Error running command \"{' '.join(cmd)}\"")
-        raise e

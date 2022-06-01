@@ -1,7 +1,6 @@
 import numpy as np
 import regex
 from tempfile import TemporaryDirectory
-import subprocess
 import warnings
 
 from custom_types import *
@@ -11,45 +10,7 @@ from utils import (
     read_file_contents,
 )
 
-
-def get_raxmlng_abs_rf_distance(log_file: FilePath) -> float:
-    STR = "Average absolute RF distance in this tree set:"
-    return get_single_value_from_file(log_file, STR)
-
-
-def get_raxmlng_rel_rf_distance(log_file: FilePath) -> float:
-    STR = "Average relative RF distance in this tree set:"
-    return get_single_value_from_file(log_file, STR)
-
-
-def get_raxmlng_num_unique_topos(log_file: FilePath) -> float:
-    STR = "Number of unique topologies in this tree set:"
-    return get_single_value_from_file(log_file, STR)
-
-
-def get_cleaned_rf_dist(raw_line: str) -> Tuple[TreeIndex, TreeIndex, float, float]:
-    line_regex = regex.compile(r"(\d+)\s+(\d+)\s+(\d+)\s+(\d+\.\d+)\s*")
-    tree_idx1, tree_idx2, plain_dist, normalized_dist = regex.search(
-        line_regex, raw_line
-    ).groups()
-    return int(tree_idx1), int(tree_idx2), float(plain_dist), float(normalized_dist)
-
-
-def read_rfdistances(
-    rfdistances_file_path: FilePath,
-) -> Tuple[TreeTreeIndexed, TreeTreeIndexed]:
-    with open(rfdistances_file_path) as f:
-        rfdistances = f.readlines()
-
-    abs_res = {}
-    rel_res = {}
-
-    for line in rfdistances:
-        idx1, idx2, plain, norm = get_cleaned_rf_dist(line)
-        abs_res[(idx1, idx2)] = plain
-        rel_res[(idx1, idx2)] = norm
-
-    return abs_res, rel_res
+from pyphypred.raxmlng import RAxMLNG
 
 
 def get_raxmlng_llh(raxmlng_file: FilePath) -> float:
@@ -160,20 +121,17 @@ def get_raxmlng_num_spr_rounds(log_file: FilePath) -> Tuple[int, int]:
 def rel_rfdistance_starting_final(
     newick_starting: Newick,
     newick_final: Newick,
-    raxmlng_executable: Command = "raxml-ng",
+    raxmlng_executable: Executable = "raxml-ng",
 ) -> float:
     with TemporaryDirectory() as tmpdir:
+        raxmlng = RAxMLNG(raxmlng_executable)
         trees = tmpdir + ".trees"
         with open(trees, "w") as f:
             f.write(newick_starting.strip() + "\n" + newick_final.strip())
 
-        cmd = [raxmlng_executable, "--rfdist", trees, "--prefix", tmpdir]
+        _, rel_rfdist, _ = raxmlng.get_rfdistance_results(trees)
 
-        subprocess.check_output(cmd)
-
-        log_file = tmpdir + ".raxml.log"
-
-        return get_raxmlng_rel_rf_distance(log_file)
+        return rel_rfdist
 
 
 def get_model_parameter_estimates(raxmlng_file: FilePath) -> Tuple[str, str, str]:

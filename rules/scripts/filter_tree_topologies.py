@@ -1,6 +1,6 @@
 from custom_types import *
 from utils import read_file_contents
-from raxmlng_parser import get_raxmlng_num_unique_topos, get_raxmlng_abs_rf_distance
+from pyphypred.raxmlng_parser import get_raxmlng_rfdist_results
 
 import pickle
 
@@ -33,7 +33,7 @@ def filter_tree_topologies(
     num_trees = len(eval_trees)
 
     if num_trees > 1:
-        num_topos = get_raxmlng_num_unique_topos(log_path)
+        num_topos, _, _ = get_raxmlng_rfdist_results(log_path)
 
         if num_topos > 1:
             clusters = get_rfdist_clusters(log_path, eval_trees)

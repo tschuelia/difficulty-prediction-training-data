@@ -6,8 +6,6 @@ import uuid
 from database import *
 from iqtree_statstest_parser import get_iqtree_results, get_iqtree_results_for_eval_tree_str
 from raxmlng_parser import (
-    get_raxmlng_rel_rf_distance,
-    get_raxmlng_num_unique_topos,
     get_all_raxmlng_llhs,
     get_raxmlng_llh,
     get_raxmlng_elapsed_time,
@@ -19,6 +17,8 @@ from raxmlng_parser import (
     get_raxmlng_runtimes
 )
 
+from pyphypred.raxmlng_parser import get_raxmlng_rfdist_results
+
 from tree_metrics import (
     get_total_branch_length_for_tree,
     get_min_branch_length_for_tree,
@@ -27,7 +27,7 @@ from tree_metrics import (
     get_avg_branch_lengths_for_tree,
 )
 
-from msa_features import MSA
+from pyphypred.msa import MSA
 
 db.init(snakemake.output.database)
 db.connect()
@@ -81,7 +81,7 @@ parsimony_scores = get_all_parsimony_scores(parsimony_logs)
 parsimony_runtimes = get_raxmlng_runtimes(parsimony_logs)
 
 num_searches = len(pars_search_trees) + len(rand_search_trees)
-data_type = MSA(snakemake.params.msa).guess_data_type()
+data_type = MSA(snakemake.params.msa).data_type
 
 # for the starting tree features, we simply take the first parsimony tree inference
 single_tree = pars_search_trees[0]
@@ -95,6 +95,11 @@ newick_starting = open(single_tree_starting).readline()
 newick_final = open(single_tree).readline()
 rate_het, base_freq, subst_rates = get_model_parameter_estimates(single_tree_log)
 
+num_topos_search, avg_rfdist_search, _ = get_raxmlng_rfdist_results(search_rfdistance)
+num_topos_eval, avg_rfdist_eval, _ = get_raxmlng_rfdist_results(eval_rfdistance)
+num_topos_plausible, avg_rfdist_plausible, _ = get_raxmlng_rfdist_results(plausible_rfdistance)
+num_topos_parsimony, avg_rfdist_parsimony, _ = get_raxmlng_rfdist_results(parsimony_rfdistance)
+
 # fmt: off
 dataset_dbobj = Dataset.create(
     uuid        = uuid.uuid4().hex,
@@ -104,18 +109,18 @@ dataset_dbobj = Dataset.create(
     # Label features
     num_searches=num_searches,
 
-    avg_rfdist_search   = get_raxmlng_rel_rf_distance(search_rfdistance),
-    num_topos_search    = get_raxmlng_num_unique_topos(search_rfdistance),
+    avg_rfdist_search   = avg_rfdist_search,
+    num_topos_search    = num_topos_search,
     mean_llh_search     = np.mean(llhs_search),
     std_llh_search      = np.std(llhs_search),
 
-    avg_rfdist_eval = get_raxmlng_rel_rf_distance(eval_rfdistance),
-    num_topos_eval  = get_raxmlng_num_unique_topos(eval_rfdistance),
+    avg_rfdist_eval = avg_rfdist_search,
+    num_topos_eval  = num_topos_eval,
     mean_llh_eval   = np.mean(llhs_eval),
     std_llh_eval    = np.std(llhs_eval),
 
-    avg_rfdist_plausible    = get_raxmlng_rel_rf_distance(plausible_rfdistance),
-    num_topos_plausible     = get_raxmlng_num_unique_topos(plausible_rfdistance),
+    avg_rfdist_plausible    = avg_rfdist_plausible,
+    num_topos_plausible     = num_topos_plausible,
     # we will update this information after inserting the trees to the database
     mean_llh_plausible  = None,
     std_llh_plausible   = None,
@@ -150,11 +155,10 @@ dataset_dbobj = Dataset.create(
     column_entropies        = msa_features["column_entropies"],
     bollback                = msa_features["bollback"],
     treelikeness            = msa_features["treelikeness"],
-    char_frequencies        = msa_features["char_frequencies"],
 
     # Parsimony Trees Features
-    avg_rfdist_parsimony    = get_raxmlng_rel_rf_distance(parsimony_rfdistance),
-    num_topos_parsimony     = get_raxmlng_num_unique_topos(parsimony_rfdistance),
+    avg_rfdist_parsimony    = avg_rfdist_parsimony,
+    num_topos_parsimony     = num_topos_parsimony,
     mean_parsimony_score    = np.mean(parsimony_scores),
     std_parsimony_score     = np.std(parsimony_scores),
 )

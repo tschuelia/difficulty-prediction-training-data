@@ -20,10 +20,10 @@ class TestMSAFeatures:
                 assert guessed_type == true_type
 
     def test_number_of_taxa(self, dna_phylip_msa):
-        assert dna_phylip_msa.get_number_of_taxa() == 68
+        assert dna_phylip_msa.number_of_taxa() == 68
 
     def test_number_of_sites(self, dna_phylip_msa):
-        assert dna_phylip_msa.get_number_of_sites() == 766
+        assert dna_phylip_msa.number_of_sites() == 766
 
     def test_get_avg_entropy(self, small_msa):
         # TODO
@@ -36,17 +36,3 @@ class TestMSAFeatures:
     def test_treelikeness_score(self, small_msa):
         # TODO
         pass
-
-    def test_get_character_frequencies(self, small_msa):
-        char_frequencies = small_msa.get_character_frequencies()
-        assert char_frequencies["A"] == 280
-        assert char_frequencies["C"] == 160
-        assert char_frequencies["T"] == 260
-        assert char_frequencies["G"] == 210
-        assert char_frequencies["N"] == 3640
-        assert char_frequencies["-"] == 670
-
-        assert (
-            sum([v for v in char_frequencies.values()])
-            == small_msa.get_number_of_taxa() * small_msa.get_number_of_sites()
-        )

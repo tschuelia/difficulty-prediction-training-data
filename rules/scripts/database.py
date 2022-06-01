@@ -57,7 +57,6 @@ class Dataset(P.Model):
     column_entropies = JSONField(null=True)
     bollback = P.FloatField(null=True)
     treelikeness = P.FloatField(null=True)
-    char_frequencies = JSONField(null=True)
 
     # Parsimony Trees Features
     avg_rfdist_parsimony = P.FloatField(null=True)

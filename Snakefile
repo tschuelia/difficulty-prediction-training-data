@@ -2,7 +2,7 @@ import os
 import sys
 
 sys.path.append("rules/scripts")
-from msa_features import MSA
+from pyphypred.msa import MSA
 
 configfile: "config.yaml"
 

@@ -5,52 +5,6 @@ from fixtures import *
 from raxmlng_parser import *
 
 
-def test_get_raxmlng_rf_distance(raxmlng_rfdistance_log):
-    abs_rfdist = get_raxmlng_abs_rf_distance(raxmlng_rfdistance_log)
-    assert isinstance(abs_rfdist, float)
-    assert abs_rfdist == pytest.approx(2)
-
-    rel_rfdist = get_raxmlng_rel_rf_distance(raxmlng_rfdistance_log)
-    assert isinstance(rel_rfdist, float)
-    assert rel_rfdist == pytest.approx(1 / 3)
-
-    num_unique = get_raxmlng_num_unique_topos(raxmlng_rfdistance_log)
-    assert isinstance(num_unique, float)
-    assert num_unique == 2
-
-
-def test_get_raxmlng_rf_distance_raises_value_error(raxmlng_inference_log):
-    # raxmlng_inference_log does not contain the desired search strings and should throw a ValueError
-    with pytest.raises(ValueError):
-        get_raxmlng_abs_rf_distance(raxmlng_inference_log)
-
-    with pytest.raises(ValueError):
-        get_raxmlng_rel_rf_distance(raxmlng_inference_log)
-
-    with pytest.raises(ValueError):
-        get_raxmlng_num_unique_topos(raxmlng_inference_log)
-
-
-def test_read_rfdistances(raxmlng_rfdistances):
-    abs_rfdists, rel_rfdists = read_rfdistances(raxmlng_rfdistances)
-
-    assert isinstance(abs_rfdists, dict)
-    assert isinstance(rel_rfdists, dict)
-
-    assert len(abs_rfdists) == 4
-    assert len(rel_rfdists) == 4
-
-    _acc = 1e-3
-
-    assert abs_rfdists == {(0, 1): 2, (0, 2): 4, (0, 3): 0, (0, 4): 1}
-    assert rel_rfdists == {
-        (0, 1): pytest.approx(1 / 3, _acc),
-        (0, 2): pytest.approx(2 / 3, _acc),
-        (0, 3): pytest.approx(0, _acc),
-        (0, 4): pytest.approx(1 / 6, _acc),
-    }
-
-
 def test_get_raxmlng_llh(raxmlng_inference_log):
     llh = get_raxmlng_llh(raxmlng_inference_log)
 

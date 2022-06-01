@@ -8,8 +8,8 @@ import sys
 
 sys.path.append(os.path.join(os.getcwd(), "rules/scripts"))
 
-from msa_features import MSA
-from raxmlng_features import RAxMLNG
+from pyphypred.msa import MSA
+from pyphypred.raxmlng import RAxMLNG
 
 @pytest.fixture
 def example_msa_path():

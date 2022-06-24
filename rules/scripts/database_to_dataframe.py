@@ -22,6 +22,7 @@ def get_difficulty_labels(df: pd.DataFrame) -> List[float]:
             "avg_rfdist_eval",
             "avg_rfdist_plausible",
             "num_topos_eval/num_trees_eval",
+            "num_topos_plausible/num_trees_plausible",
         ]:
             if (row[col] > -np.inf) and (row[col] < np.inf) and (row[col] is not None):
                 diff_proba += row[col]

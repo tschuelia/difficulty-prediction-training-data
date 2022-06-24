@@ -1,6 +1,7 @@
 # Difficulty Prediction Training Data Pipeline
-This pipeline generates training data for predicting the difficulty of molecular datasets.
-The goal is to predict the difficulty of a dataset in order to improve the runtime and ressource usage of phylogenetic inference.
+This pipeline generates training data for predicting the difficulty of phylogenetic data.
+The goal is to predict the difficulty of a dataset in order to improve the runtime and resource usage of phylogenetic inference.
+This pipeline is used to generate the training data for [Pythia](https://github.com/tschuelia/PyPythia). For details on Pythia, see the linked repository or the preprint publication below. 
 
 ### Requirements
 1. Setup the conda environment:
@@ -8,7 +9,7 @@ The goal is to predict the difficulty of a dataset in order to improve the runti
     conda env create -f environment.yml
     ```
 2. Install RAxML-NG.
-   Note that you need my version of RAxML-NG in order to generate parsimony trees for protein datasets.
+   Note that you need my version of RAxML-NG, as this version contains additional features required for this pipeline.
    ```
    git clone --recursive https://github.com/tschuelia/raxml-ng.git
    cd raxml-ng
@@ -35,3 +36,16 @@ If you intend to run snakemake on a slurm cluster, you might want to check out [
 In the output directory you will find a subdirectory for each MSA you provided as input. Each subdirectory contains a `data.sqlite3` SQLite database and a Parquet file.
 
 The subdirectory `output_files` contains the intermediate files and logs of all snakemake steps. 
+
+
+### Training Data
+This repository also contains the training data as parquet file. To open the file, you need `pyarrow` or `fastparquet` installed in your environment. 
+Then you can open the file with pandas using `pd.read_parquet("training_data.parquet")`.
+
+Careful, the training data does not only contain all features we used during our prediction experiments, but also the features we used to quantify the difficulty. 
+The file `features.py` contains further explanation of the features and lists of features and respective labels that can be used for experimenting with the training data.
+
+
+## Preprint Publication
+The paper explaining the details of Pythia is available as preprint on BioRxiv:   
+Haag, J., Höhler, D., Bettisworth, B., & Stamatakis, A. (2022). **From Easy to Hopeless - Predicting the Difficulty of Phylogenetic Analyses.** BioRxiv. [https://doi.org/10.1101/2022.06.20.496790](https://doi.org/10.1101/2022.06.20.496790)

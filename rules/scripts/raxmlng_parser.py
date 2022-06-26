@@ -10,7 +10,7 @@ from utils import (
     read_file_contents,
 )
 
-from pyphypred.raxmlng import RAxMLNG
+from pypythia.raxmlng import RAxMLNG
 
 
 def get_raxmlng_llh(raxmlng_file: FilePath) -> float:

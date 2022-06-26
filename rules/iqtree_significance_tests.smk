@@ -30,16 +30,19 @@ rule iqtree_significance_tests_on_eval_trees:
         summary     = f"{output_files_iqtree_dir}significance.iqtree",
         iqtree_log  = f"{output_files_iqtree_dir}significance.iqtree.log",
     params:
-        msa     = lambda wildcards: msas[wildcards.msa],
-        prefix  = f"{output_files_iqtree_dir}significance",
-        model   = lambda wildcards: iqtree_models[wildcards.msa],
-        model_str = "-p" if partitioned else "-m",
-        threads = config["software"]["iqtree"]["threads"]
+        msa         = lambda wildcards: msas[wildcards.msa],
+        data_type   = lambda wildcards: data_types[wildcards.msa],
+        prefix      = f"{output_files_iqtree_dir}significance",
+        model       = lambda wildcards: iqtree_models[wildcards.msa],
+        model_str   = "-p" if partitioned else "-m",
+        threads     = config["software"]["iqtree"]["threads"]
     log:
         f"{output_files_iqtree_dir}significance.iqtree.snakelog",
-    shell:
-        "{iqtree_command} "
+    run:
+        morph = "-st MORPH " if params.data_type == "MORPH" else ""
+        shell("{iqtree_command} "
         "-s {params.msa} "
+        "{morph} "
         "{params.model_str} {params.model} "
         "-pre {params.prefix} "
         "-z {input.filtered_trees} "
@@ -50,4 +53,4 @@ rule iqtree_significance_tests_on_eval_trees:
         "-au "
         "-nt {params.threads} "
         "-seed 0 "
-        "> {output.iqtree_log} "
+        "> {output.iqtree_log} ")

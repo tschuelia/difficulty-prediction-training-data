@@ -2,7 +2,7 @@ import os
 import sys
 
 sys.path.append("rules/scripts")
-from pyphypred.msa import MSA
+from pypythia.msa import MSA
 
 configfile: "config.yaml"
 
@@ -39,16 +39,23 @@ else:
     # infer the data type for each MSA
     raxmlng_models = []
     iqtree_models = []
+    msa_types = []
     for msa, name in zip(msa_paths, msa_names):
-        m = MSA(msa)
-        raxmlng_models.append((name, "GTR+G" if m.data_type == "DNA" else "LG+G"))
-        iqtree_models.append((name, "GTR+G4+FO" if m.data_type == "DNA" else "LG+G4+FO"))
+        msa = MSA(msa)
+        msa_types.append(msa.data_type)
 
+        raxmlng_model = msa.get_raxmlng_model()
+        raxmlng_models.append((name, raxmlng_model))
+
+        if msa.data_type == "MORPH":
+            iqtree_models.append((name, "MK"))
+        else:
+            iqtree_models.append((name, f"{raxmlng_model}4+FO"))
     raxmlng_models = dict(raxmlng_models)
     iqtree_models = dict(iqtree_models)
 
-
 msas = dict(zip(msa_names, msa_paths))
+data_types = dict(zip(msa_names, msa_types))
 
 outdir = config["outdir"]
 db_path = outdir + "{msa}/"

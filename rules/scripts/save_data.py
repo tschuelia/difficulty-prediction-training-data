@@ -17,7 +17,7 @@ from raxmlng_parser import (
     get_raxmlng_runtimes
 )
 
-from pyphypred.raxmlng_parser import get_raxmlng_rfdist_results
+from pypythia.raxmlng_parser import get_raxmlng_rfdist_results
 
 from tree_metrics import (
     get_total_branch_length_for_tree,
@@ -27,7 +27,7 @@ from tree_metrics import (
     get_avg_branch_lengths_for_tree,
 )
 
-from pyphypred.msa import MSA
+from pypythia.msa import MSA
 
 db.init(snakemake.output.database)
 db.connect()

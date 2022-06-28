@@ -14,4 +14,4 @@ dependencies:
   - biopython
   - treelite
   - pip
-    - git+https://github.com/tschuelia/PyPhyPred.git
+    - git+https://github.com/tschuelia/PyPythia.git

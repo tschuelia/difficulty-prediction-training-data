@@ -1,6 +1,6 @@
 from custom_types import *
 from utils import read_file_contents
-from pyphypred.raxmlng_parser import get_raxmlng_rfdist_results
+from pypythia.raxmlng_parser import get_raxmlng_rfdist_results
 
 import pickle
 

@@ -23,7 +23,8 @@ This pipeline is used to generate the training data for [Pythia](https://github.
 1. Configure the pipeline by changing the `config.yaml` file:
    * Provide the paths to the MSA files in `msa_paths`.
    * You can either provide partition files for each of the MSAs, or let the pipeline automatically set the model. Note that you have to either provide partitions for all MSAs or for none.
-   In this case, all DNA MSAs will be analyzed using the `GTR+G` (RAxML-NG) and `GTR+FO+G4` (IQ-Tree) model, respectively for protein data `LG+G` (RAxML-NG) and `LG+FO+G4` (IQ-Tree) will be used.
+   In this case, all DNA MSAs will be analyzed using the `GTR+G` (RAxML-NG) and `GTR+FO+G4` (IQ-Tree) model, respectively for protein data `LG+G` (RAxML-NG) and `LG+FO+G4` (IQ-Tree) will be used. 
+   For morphological data the pipeline uses `MULTI{num_states}_GTR` in RAxML-NG and `MK` in IQ-Tree.
    * You can change the `outdir` variable to tell snakemake where to store the output files. The default is a folder called `data` in the current workdir.
    * In the `software` section provide the paths to executables of RAxML-NG, IQ-Tree from the above installs.
 

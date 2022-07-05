@@ -31,6 +31,12 @@ if isinstance(msa_paths[0], list):
 
 # This assumes, that each msa
 msa_names = [os.path.split(pth)[1] for pth in msa_paths]
+msas = dict(zip(msa_names, msa_paths))
+
+data_types = {}
+for msa, name in zip(msa_paths, msa_names):
+    msa = MSA(msa)
+    data_types[name] = msa.data_type
 
 if partitioned:
     raxmlng_models = dict(list(zip(msa_names, part_paths_raxmlng)))
@@ -39,11 +45,8 @@ else:
     # infer the data type for each MSA
     raxmlng_models = []
     iqtree_models = []
-    msa_types = []
-    for msa, name in zip(msa_paths, msa_names):
+    for name, msa in msas.items():
         msa = MSA(msa)
-        msa_types.append(msa.data_type)
-
         raxmlng_model = msa.get_raxmlng_model()
         raxmlng_models.append((name, raxmlng_model))
 
@@ -51,11 +54,11 @@ else:
             iqtree_models.append((name, "MK"))
         else:
             iqtree_models.append((name, f"{raxmlng_model}4+FO"))
+
     raxmlng_models = dict(raxmlng_models)
     iqtree_models = dict(iqtree_models)
 
-msas = dict(zip(msa_names, msa_paths))
-data_types = dict(zip(msa_names, msa_types))
+
 
 outdir = config["outdir"]
 db_path = outdir + "{msa}/"

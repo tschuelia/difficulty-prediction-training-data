@@ -83,6 +83,8 @@ def save_raxmlng_tree_data_and_add_tree_characteristics():
         metrics = pd.DataFrame(metrics, index=row.index)
         tree_metrics.append(metrics)
 
+    tree_metrics = pd.DataFrame(data=tree_metrics)
+    df = pd.concat([df, tree_metrics], axis=1, ignore_index=True)
     df.to_parquet(snakemake.output.raxmlng_tree_data)
 
 

@@ -80,11 +80,11 @@ def save_raxmlng_tree_data_and_add_tree_characteristics():
     for idx, row in df.iterrows():
         newick_tree = row.newick_eval
         metrics = get_tree_characteristics(newick_tree)
-        metrics = pd.DataFrame(metrics, index=row.index)
+        metrics = pd.DataFrame(metrics, index=[idx])
         tree_metrics.append(metrics)
-
-    tree_metrics = pd.DataFrame(data=tree_metrics)
-    df = pd.concat([df, tree_metrics], axis=1, ignore_index=True)
+    
+    tree_metrics = pd.concat(tree_metrics)
+    df = pd.concat([df, tree_metrics], axis=1)
     df.to_parquet(snakemake.output.raxmlng_tree_data)
 
 

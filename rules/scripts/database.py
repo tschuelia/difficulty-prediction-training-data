@@ -39,11 +39,6 @@ class Dataset(P.Model):
     rate_heterogeneity_final = JSONField(null=True)
     eq_frequencies_final = JSONField(null=True)
     substitution_rates_final = JSONField(null=True)
-    average_branch_length_final = P.FloatField(null=True)
-    std_branch_length_final = P.FloatField(null=True)
-    total_branch_length_final = P.FloatField(null=True)
-    minimum_branch_length_final = P.FloatField(null=True)
-    maximum_branch_length_final = P.FloatField(null=True)
     newick_starting = P.TextField(null=True)
     newick_final = P.TextField(null=True)
 

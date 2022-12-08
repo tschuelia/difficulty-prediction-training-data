@@ -1,10 +1,9 @@
 import json
 import numpy as np
-import pickle
 import uuid
 
 from database import *
-from iqtree_statstest_parser import get_iqtree_results, get_iqtree_results_for_eval_tree_str
+from iqtree_statstest_parser import get_iqtree_results
 from raxmlng_parser import (
     get_all_raxmlng_llhs,
     get_raxmlng_llh,
@@ -18,15 +17,6 @@ from raxmlng_parser import (
 )
 
 from pypythia.raxmlng_parser import get_raxmlng_rfdist_results
-
-from tree_metrics import (
-    get_total_branch_length_for_tree,
-    get_min_branch_length_for_tree,
-    get_max_branch_length_for_tree,
-    get_std_branch_lengths_for_tree,
-    get_avg_branch_lengths_for_tree,
-)
-
 from pypythia.msa import MSA
 
 db.init(snakemake.output.database)
@@ -57,13 +47,12 @@ rand_eval_trees = snakemake.input.rand_eval_trees
 rand_eval_logs = snakemake.input.rand_eval_logs
 eval_logs_collected = snakemake.input.eval_logs_collected
 eval_rfdistance = snakemake.input.eval_rfdistance
+best_eval_tree = open(snakemake.input.best_eval_tree).readline().strip()
 
 # plausible
 plausible_rfdistance = snakemake.input.plausible_rfdistance
 plausible_trees_collected = snakemake.input.plausible_trees_collected
 iqtree_results = get_iqtree_results(snakemake.input.iqtree_results)
-with open(snakemake.input.clusters, "rb") as f:
-    clusters = pickle.load(f)
 
 # msa features
 with open(snakemake.input.msa_features) as f:
@@ -162,14 +151,14 @@ dataset_dbobj = Dataset.create(
     mean_parsimony_score    = np.mean(parsimony_scores),
     std_parsimony_score     = np.std(parsimony_scores),
 )
-# fmt: on
 
+
+# fmt: on
 def save_raxmlng_tree(search_trees, search_logs, eval_trees, eval_logs, starting_type):
     plausible_llhs = []
 
-    for (search_tree, search_log, eval_tree, eval_log) in zip(search_trees, search_logs, eval_trees, eval_logs):
-        newick_eval = open(eval_tree).readline()
-        statstest_results, cluster_id = get_iqtree_results_for_eval_tree_str(iqtree_results, newick_eval, clusters)
+    for (search_tree, search_log, eval_tree, eval_log, statstest_results) in zip(search_trees, search_logs, eval_trees, eval_logs, iqtree_results):
+        newick_eval = open(eval_tree).readline().strip()
         tests = statstest_results["tests"]
 
         RaxmlNGTree.create(
@@ -187,11 +176,10 @@ def save_raxmlng_tree(search_trees, search_logs, eval_trees, eval_logs, starting
             newick_eval=newick_eval,
             llh_eval=get_raxmlng_llh(eval_log),
             compute_time_eval=get_raxmlng_elapsed_time(eval_log),
+            is_best=newick_eval == best_eval_tree,
 
             # Plausible trees
             plausible=statstest_results["plausible"],
-            cluster_id=cluster_id,
-
             bpRell=tests["bp-RELL"]["score"],
             bpRell_significant=tests["bp-RELL"]["significant"],
             pKH=tests["p-KH"]["score"],

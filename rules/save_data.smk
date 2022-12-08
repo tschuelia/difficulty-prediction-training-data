@@ -16,6 +16,7 @@ rule save_data:
         pars_eval_logs  = expand(raxmlng_tree_eval_prefix_pars + ".raxml.eval.log",seed=pars_seeds,allow_missing=True),
         rand_eval_trees = expand(raxmlng_tree_eval_prefix_rand + ".raxml.bestTree", seed=rand_seeds, allow_missing=True),
         rand_eval_logs  = expand(raxmlng_tree_eval_prefix_rand + ".raxml.eval.log",seed=rand_seeds,allow_missing=True),
+        best_eval_tree      = f"{raxmlng_tree_eval_dir}BestEvalTree.tree",
         eval_logs_collected = f"{raxmlng_tree_eval_dir}AllEvalLogs.log",
 
         # Eval tree RFDistance logs
@@ -25,9 +26,8 @@ rule save_data:
         plausible_rfdistance = f"{raxmlng_tree_eval_dir}plausible.raxml.rfDistances.log",
         plausible_trees_collected = f"{raxmlng_tree_eval_dir}AllPlausibleTrees.trees",
 
-        # IQ-Tree significance test results and clusters
+        # IQ-Tree significance test results
         iqtree_results  = f"{output_files_iqtree_dir}significance.iqtree",
-        clusters        = f"{output_files_iqtree_dir}filteredEvalTrees.clusters.pkl",
 
         # MSA Features
         msa_features = f"{output_files_dir}msa_features.json",
@@ -60,7 +60,8 @@ rule database_to_training_dataframe:
     input:
         database = rules.move_db.output.database,
     output:
-        dataframe = f"{db_path}training_data.parquet"
+        training_data = f"{db_path}training_data.parquet",
+        raxmlng_tree_data = f"{db_path}raxmlng_tree_data.parquet",
     params:
         num_pars_trees = num_pars_trees,
         num_rand_trees = num_rand_trees,

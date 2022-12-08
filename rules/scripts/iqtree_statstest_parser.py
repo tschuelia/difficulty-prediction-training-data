@@ -25,8 +25,18 @@ table_header_re = regex.compile(table_header)
 table_entry = rf"({tree_id_re}){blanks}({llh_re}){blanks}({deltaL_re}){blanks}(?:({test_result_re})\s*)*"
 table_entry_re = regex.compile(table_entry)
 
+# if there is only a single plausible tree
+# the line will look like this:
+# 1  -88.9544627       0
+table_entry_single_plausible_tree = (
+    rf"({tree_id_re}){blanks}({llh_re}){blanks}({deltaL_re})\s*"
+)
+table_entry_single_plausible_tree_re = regex.compile(table_entry_single_plausible_tree)
+
 START_STRING = "USER TREES"
 END_STRING = "TIME STAMP"
+
+TEST_NAMES = ["bp-RELL", "p-KH", "p-SH", "p-WKH", "p-WSH", "c-ELW", "p-AU"]
 
 
 def get_relevant_section(input_file):
@@ -64,37 +74,44 @@ def get_relevant_section(input_file):
     return content[start:end]
 
 
-def get_names_of_performed_tests(table_section):
-    """
-    Returns the names of the performed iqtree tests as stated in the table header.
-
-    Args:
-        table_section: String containing the iqtree test result table.
-
-    Returns:
-        A list of strings, each string is the name of a performed statistical test.
-
-    Raises:
-        ValueError if the section does not contain a table header matching the defined regex.
-    """
-    test_names = []
-
-    for line in table_section:
-        line = line.strip()
-        m = regex.match(table_header_re, line)
-        if m:
-            # m captures 2 groups: the first is (Tree, logL, deltaL), the second are the tests
-            test_names = m.captures(1)
-
-    if not test_names:
-        raise ValueError(
-            "No line in the given section matches the regex. Compare the regex and the given section. Maybe the format has changed."
-        )
-    return test_names
+def _get_default_entry():
+    return {
+        "plausible": 1,
+        "tests": {
+            "bp-RELL": {"score": 1, "significant": True},
+            "p-KH": {"score": 1, "significant": True},
+            "p-SH": {"score": 1, "significant": True},
+            "p-WKH": {"score": 1, "significant": True},
+            "p-WSH": {"score": 1, "significant": True},
+            "c-ELW": {"score": 1, "significant": True},
+            "p-AU": {"score": 1, "significant": True},
+        },
+    }
 
 
-def get_cleaned_table_entries(
-    table_section):
+def _regex_group_to_test_results(raw_results):
+    assert len(TEST_NAMES) == len(raw_results)
+
+    data = {"tests": {}}
+    num_passed = 0
+
+    for i, test in enumerate(TEST_NAMES):
+        test_result = raw_results[i]
+        score, significant = test_result.split(" ")
+        score = score.strip()
+        significant = significant.strip()
+        data["tests"][test] = {}
+        data["tests"][test]["score"] = float(score)
+        data["tests"][test]["significant"] = True if significant == "+" else False
+
+        if data["tests"][test]["significant"]:
+            num_passed += 1
+
+    data["plausible"] = num_passed == len(data["tests"].keys())
+    return data
+
+
+def get_cleaned_table_entries(table_section):
     """
     Returns the content of the table in the given section.
 
@@ -112,57 +129,47 @@ def get_cleaned_table_entries(
         line = line.strip()
         # match the line against the regex defined above for a table entry
         m = regex.match(table_entry_re, line)
+
+        # and match the line against the regex for a table entry in case of a single plausible tree
+        m_single_tree = regex.match(table_entry_single_plausible_tree_re, line)
+
         if m:
-            # if a match was found: capture the results in variables
+            # if a match for a full table entry was found: capture the results as stated in the table
             tree_id, llh, deltaL, result_group = m.groups()
             # to capture all test results individually we have to explicitly unpack it
-            test_results = m.captures(4)
-            entry = (int(tree_id), float(llh), float(deltaL), test_results)
+            raw_results = m.captures(4)
+
+            # transform the raw results to a python dict
+            entry = _regex_group_to_test_results(raw_results)
+            entry["logL"] = float(llh)
+            entry["deltaL"] = float(deltaL)
+            entries.append(entry)
+        elif m_single_tree:
+            # if a match for a truncated table entry was found: we only have a single plausible tree
+            # => add the entry manually
+            tree_id, llh, deltaL = m_single_tree.groups()
+            entry = _get_default_entry()
+            entry["logL"] = float(llh)
+            entry["deltaL"] = float(deltaL)
+            entries.append(entry)
+        elif "= tree" in line:
+            # indicates that a tree is identical to one seen before
+            # => duplicate the results of this tree
+            _, id_of_identical_tree = line.rsplit(" ", 1)
+            id_of_identical_tree = int(id_of_identical_tree)
+
+            # IQ-Tree reports the results 1-indexed
+            # => to get the correct results we need to subtract one and access the entries
+            entry = entries[id_of_identical_tree - 1]
             entries.append(entry)
 
     if not entries:
         raise ValueError(
-            "No line in the given section matches the regex. Compare the regex and the given section. Maybe the format has changed."
+            "No line in the given section matches the regex. Compare the regex and the given section. "
+            "Maybe the format has changed."
         )
 
     return entries
-
-
-def _get_default_entry():
-    return {
-                "deltaL": 0,
-                "plausible": 1,
-                "tests": {
-                    'bp-RELL': {
-                        'score': 1,
-                        'significant': True
-                    },
-                    'p-KH': {
-                        'score': 1,
-                        'significant': True
-                    },
-                    'p-SH': {
-                        'score': 1,
-                        'significant': True
-                    },
-                    'p-WKH': {
-                        'score': 1,
-                        'significant': True
-                    },
-                    'p-WSH': {
-                        'score': 1,
-                        'significant': True
-                    },
-                    'c-ELW': {
-                        'score': 1,
-                        'significant': True
-                    },
-                    'p-AU': {
-                        'score': 1,
-                        'significant': True
-                    }
-                }
-            }
 
 
 def get_iqtree_results(iqtree_file):
@@ -177,48 +184,5 @@ def get_iqtree_results(iqtree_file):
             iqtree tests.
     """
     section = get_relevant_section(iqtree_file)
-    try:
-        entries = get_cleaned_table_entries(section)
-        test_names = get_names_of_performed_tests(section)
-    except ValueError as e:
-        warnings.warn(str(e))
-        warnings.warn("Falling back to default case.")
-        return [_get_default_entry()]
-
-    results = []
-
-    for tree_id, llh, deltaL, test_results in entries:
-        assert len(test_names) == len(test_results)
-
-        data = {}
-        data["logL"] = llh
-        data["deltaL"] = deltaL
-        data["tests"] = {}
-
-        num_passed = 0
-
-        for i, test in enumerate(test_names):
-            test_result = test_results[i]
-            score, significant = test_result.split(" ")
-            score = score.strip()
-            significant = significant.strip()
-            data["tests"][test] = {}
-            data["tests"][test]["score"] = float(score)
-            data["tests"][test]["significant"] = True if significant == "+" else False
-
-            if data["tests"][test]["significant"]:
-                num_passed += 1
-
-        data["plausible"] = num_passed == len(data["tests"].keys())
-
-        results.append(data)
-    return results
-
-
-def get_iqtree_results_for_eval_tree_str(iqtree_results, eval_tree_str, clusters):
-    # returns the results for this eval_tree_id as well as the cluster ID
-    for i, cluster in enumerate(clusters):
-        if eval_tree_str.strip() in cluster:
-            return iqtree_results[i], i
-
-    raise ValueError("This newick_string belongs to no cluster. newick_str: ", eval_tree_str[:10])
+    entries = get_cleaned_table_entries(section)
+    return entries

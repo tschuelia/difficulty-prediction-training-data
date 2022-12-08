@@ -3,6 +3,8 @@
 .DS_Store
 software/
 results/
+*.parquet
+*.pickle
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -79,10 +79,10 @@ class RaxmlNGTree(P.Model):
     newick_eval = P.TextField(null=True)
     llh_eval = P.FloatField(null=True)
     compute_time_eval = P.FloatField(null=True)
+    is_best = P.BooleanField(null=True)
 
     # significance tests
     plausible = P.BooleanField(null=True)
-    cluster_id = P.IntegerField(null=True)
 
     bpRell = P.FloatField(null=True)
     bpRell_significant = P.BooleanField(null=True)

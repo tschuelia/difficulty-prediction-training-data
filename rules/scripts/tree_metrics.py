@@ -1,39 +1,98 @@
-from Bio import Phylo
-import numpy as np
+import statistics
+from ete3 import Tree
+import rpy2.robjects as robjects
+from rpy2.robjects.packages import importr
 
-from custom_types import *
-
-
-def get_tree_object(newick_str: Newick):
-    trees = list(Phylo.NewickIO.Parser.from_string(newick_str).parse())
-    return trees[0]
+R_SPECTRAL = importr("RPANDA")
+R_APE = importr("ape")
 
 
-def get_all_branch_lengths_for_tree(newick_str: Newick) -> List[float]:
-    tree = get_tree_object(newick_str)
-    return [node.branch_length for node in tree.find_clades(branch_length=True)]
+def _get_stats_for_batch(brlen_batch, suffix):
+    return {
+        f"mean_{suffix}": statistics.mean(brlen_batch),
+        f"median_{suffix}": statistics.median(brlen_batch),
+        f"stdev_{suffix}": statistics.stdev(brlen_batch),
+        f"total_{suffix}": sum(brlen_batch),
+        f"min_{suffix}": min(brlen_batch),
+        f"max_{suffix}": max(brlen_batch),
+    }
 
 
-def get_total_branch_length_for_tree(newick_str: Newick) -> float:
-    all_brlens = get_all_branch_lengths_for_tree(newick_str)
-    return sum(all_brlens)
+def get_internal_external_brlens(newick_tree):
+    tree = Tree(newick_tree)
+    external_brlens = []
+    internal_brlens = []
+
+    internal_nodes = []
+
+    for node in tree.traverse():
+        if node.is_leaf():
+            external_brlens.append(node.dist)
+        else:
+            internal_brlens.append(node.dist)
+            internal_nodes.append(node)
+
+    return internal_brlens, external_brlens
 
 
-def get_min_branch_length_for_tree(newick_str: Newick) -> float:
-    all_brlens = get_all_branch_lengths_for_tree(newick_str)
-    return min(all_brlens)
+def compute_brlen_statistics(internal_brlens, external_brlens):
+    all_brlens = external_brlens + internal_brlens
+
+    data = {
+        **_get_stats_for_batch(external_brlens, "external_brlens"),
+        **_get_stats_for_batch(internal_brlens, "internal_brlens"),
+        **_get_stats_for_batch(all_brlens, "all_brlens")
+    }
+
+    return data
 
 
-def get_max_branch_length_for_tree(newick_str: Newick) -> float:
-    all_brlens = get_all_branch_lengths_for_tree(newick_str)
-    return max(all_brlens)
+def get_treeness(brlen_stats):
+    sum_internal = brlen_stats["total_internal_brlens"]
+    sum_total = brlen_stats["total_all_brlens"]
+
+    return {"treeness": sum_internal / sum_total}
 
 
-def get_avg_branch_lengths_for_tree(newick_str: Newick) -> float:
-    all_brlens = get_all_branch_lengths_for_tree(newick_str)
-    return np.mean(all_brlens)
+def get_percentage_near_zero_brlens(brlens):
+    near_zero_brlens = [b for b in brlens if b < 0.0001]
+    return len(near_zero_brlens) / len(brlens)
 
 
-def get_std_branch_lengths_for_tree(newick_str: Newick) -> float:
-    all_brlens = get_all_branch_lengths_for_tree(newick_str)
-    return np.std(all_brlens)
+def spectral_analysis(newick_tree):
+    phylo = f"read.tree(text='{newick_tree}')"
+    try:
+        spectral = R_SPECTRAL.spectR(robjects.r(phylo))
+        spectral = {key: spectral.rx2(key)[0] for key in spectral.names}
+        return spectral
+    except:
+        return None
+
+
+def tree_diameter(newick_tree):
+    tree = Tree(newick_tree)
+
+    diameter = 0.0
+
+    for node in tree.traverse():
+        _, max_dist = node.get_farthest_node()
+        diameter = max(diameter, max_dist)
+
+    return diameter
+
+
+def get_tree_characteristics(newick_tree):
+    internal_brlens, external_brlens = get_internal_external_brlens(newick_tree)
+    brlen_stats = compute_brlen_statistics(internal_brlens, external_brlens)
+
+    data = {
+        "internal_brlens": [internal_brlens],
+        "external_brlens": [external_brlens],
+        **brlen_stats,
+        "near_zero_percentage_internal": get_percentage_near_zero_brlens(internal_brlens),
+        "near_zero_percentage_external": get_percentage_near_zero_brlens(external_brlens),
+        **spectral_analysis(newick_tree),
+        "diameter": tree_diameter(newick_tree)
+    }
+
+    return data

@@ -61,7 +61,6 @@ rule database_to_training_dataframe:
         database = rules.move_db.output.database,
     output:
         training_data = f"{db_path}training_data.parquet",
-        raxmlng_tree_data = f"{db_path}raxmlng_tree_data.parquet",
     params:
         num_pars_trees = num_pars_trees,
         num_rand_trees = num_rand_trees,

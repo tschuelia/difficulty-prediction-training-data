@@ -74,6 +74,8 @@ raxmlng_tree_inference_prefix_rand = raxmlng_tree_inference_dir + "rand_{seed}"
 raxmlng_tree_eval_dir = output_files_raxmlng_dir + "evaluation/"
 raxmlng_tree_eval_prefix_pars = raxmlng_tree_eval_dir + "pars_{seed}"
 raxmlng_tree_eval_prefix_rand = raxmlng_tree_eval_dir + "rand_{seed}"
+# bootstrapping
+raxmlng_bootstrap_prefix =  output_files_raxmlng_dir + "bootstrap/"
 
 # File paths for IQ-Tree files
 output_files_iqtree_dir = output_files_dir + "iqtree/"
@@ -98,3 +100,4 @@ include: "rules/iqtree_significance_tests.smk"
 include: "rules/msa_features.smk"
 include: "rules/parsimony.smk"
 include: "rules/save_data.smk"
+include: "rules/tree_metrics.smk"

@@ -60,7 +60,8 @@ def get_percentage_near_zero_brlens(brlens):
 
 
 def spectral_analysis(newick_tree):
-    phylo = f"read.tree(text='{newick_tree}')"
+    # phylo = f"read.tree(text='{newick_tree}')"
+    phylo = R_APE.read_tree(text=newick_tree)
     try:
         spectral = R_SPECTRAL.spectR(robjects.r(phylo))
         spectral = {key: spectral.rx2(key)[0] for key in spectral.names}

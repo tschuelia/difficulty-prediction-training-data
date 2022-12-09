@@ -3,7 +3,7 @@
 # include bootstrapping metrics in collect_tree_metrics
 rule raxmlng_bootstrap:
     output:
-        bootstraps = f"{raxmlng_bootstrap_prefix}.raxml.log",
+        bootstraps = f"{raxmlng_bootstrap_prefix}.raxml.bootstraps",
         bootstrap_log = f"{raxmlng_bootstrap_prefix}.raxml.log"
     params:
         msa = lambda wildcards: msas[wildcards.msa],

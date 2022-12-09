@@ -35,14 +35,14 @@ def get_bootstrap_metrics(raxmlng_command, newick_tree, bootstraps):
     proportion_high = len(high_support_values) / len(support_values)
 
     data = {
-        "average": statistics.mean(support_values),
-        "standard_dev": statistics.stdev(support_values),
-        "median": statistics.median(support_values),
-        "minimum": min(support_values),
-        "maximum": max(support_values),
-        "total": sum(support_values),
-        "proportion_greater_70": proportion_high,
-        "raw_values": [support_values],
+        "average_bs_support": statistics.mean(support_values),
+        "standard_dev_bs_support": statistics.stdev(support_values),
+        "median_bs_support": statistics.median(support_values),
+        "minimum_bs_support": min(support_values),
+        "maximum_bs_support": max(support_values),
+        "total_bs_support": sum(support_values),
+        "proportion_greater_70_bs_support": proportion_high,
+        "raw_bs_support": [support_values],
     }
 
     return data

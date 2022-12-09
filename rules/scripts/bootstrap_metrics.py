@@ -18,7 +18,7 @@ def _extract_support_values(newick):
 def get_bootstrap_support_values_for_tree(raxmlng_command, newick_tree, bootstraps):
     with TemporaryDirectory() as tmpdir:
         prefix = os.path.join(tmpdir, "bootstrap")
-        tree_file = os.path.join(prefix, "newick.tree")
+        tree_file = os.path.join(tmpdir, "newick.tree")
 
         with open(tree_file, "w") as f:
             f.write(newick_tree)

@@ -7,7 +7,7 @@ from tempfile import TemporaryDirectory
 
 
 def _run_raxmlng_support(raxmlng_command, tree_file, bootstraps, prefix):
-    shell(f"{raxmlng_command} --support --tree {tree_file} --bs-trees {bootstraps} --prefix {prefix} --threads 2")
+    shell(f"{raxmlng_command} --support --tree {tree_file} --bs-trees {bootstraps} --prefix {prefix} --threads 2 > {prefix}.snakelog")
 
 
 def _extract_support_values(newick):

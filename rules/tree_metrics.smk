@@ -43,7 +43,7 @@ rule compute_and_collect_tree_metrics:
     output:
         raxmlng_tree_data = f"{db_path}raxmlng_tree_data.parquet",
     params:
-        bootstrap_based_metrics = bootstrap_based_metrics,
+        bootstrap_based_metrics = config["bootstrap_based_metrics"],
         raxmlng_command = raxmlng_command
     script:
         "scripts/compute_and_collect_tree_metrics.py"

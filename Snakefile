@@ -15,7 +15,6 @@ num_parsimony_trees = config["_debug"]["_num_parsimony_trees"]
 
 pars_seeds = range(num_pars_trees)
 rand_seeds = range(num_pars_trees, num_pars_trees + num_rand_trees)
-# Parsimonator requires seeds greater than 1
 parsimony_seeds = range(1, num_parsimony_trees + 1)
 
 # TODO: resolve duplicate names

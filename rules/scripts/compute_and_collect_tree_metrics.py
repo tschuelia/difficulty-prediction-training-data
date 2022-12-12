@@ -11,7 +11,6 @@ def save_raxmlng_tree_data_and_add_tree_characteristics():
     con.close()
 
     raxmlng = snakemake.params.raxmlng_command
-    bootstrap_replicates = snakemake.input.bootstraps
 
     # for each tree: get the tree characteristics and append the data to the dataframe
     tree_metrics = []
@@ -23,9 +22,10 @@ def save_raxmlng_tree_data_and_add_tree_characteristics():
         metrics = pd.DataFrame(metrics, index=[idx])
         tree_metrics.append(metrics)
 
-        bootstrap = get_bootstrap_metrics(raxmlng, newick_tree, bootstrap_replicates)
-        bootstrap = pd.DataFrame(bootstrap, index=[idx])
-        bootstrap_metrics.append(bootstrap)
+        if do_bootstrapping:
+            bootstrap = get_bootstrap_metrics(raxmlng, newick_tree, snakemake.input.bootstraps)
+            bootstrap = pd.DataFrame(bootstrap, index=[idx])
+            bootstrap_metrics.append(bootstrap)
 
     tree_metrics = pd.concat(tree_metrics)
     bootstrap_metrics = pd.concat(bootstrap_metrics)
@@ -34,4 +34,5 @@ def save_raxmlng_tree_data_and_add_tree_characteristics():
 
 
 if __name__ == "__main__":
+    do_bootstrapping = snakemake.params.bootstrap_based_metrics
     save_raxmlng_tree_data_and_add_tree_characteristics()

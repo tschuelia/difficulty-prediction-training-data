@@ -1,6 +1,15 @@
-# TODO:
-# rule bootstrap support per tree
-# include bootstrapping metrics in collect_tree_metrics
+def tree_metrics_input():
+    input_files = {
+        "database": rules.move_db.output.database,
+        "eval_trees": rules.collect_eval_trees.output.all_eval_trees,
+    }
+
+    if config["bootstrap_based_metrics"]:
+        input_files["bootstraps"] = rules.raxmlng_bootstrap.output.bootstraps
+
+    return input_files
+
+
 rule raxmlng_bootstrap:
     output:
         bootstraps = f"{raxmlng_bootstrap_prefix}.raxml.bootstraps",
@@ -25,13 +34,16 @@ rule raxmlng_bootstrap:
 
 
 rule compute_and_collect_tree_metrics:
+    # input:
+    #     database    = rules.move_db.output.database,
+    #     bootstraps  = rules.raxmlng_bootstrap.output.bootstraps,
+    #     eval_trees  = rules.collect_eval_trees.output.all_eval_trees,
     input:
-        database    = rules.move_db.output.database,
-        bootstraps  = rules.raxmlng_bootstrap.output.bootstraps,
-        eval_trees  = rules.collect_eval_trees.output.all_eval_trees,
+        tree_metrics_input()
     output:
         raxmlng_tree_data = f"{db_path}raxmlng_tree_data.parquet",
     params:
+        bootstrap_based_metrics = bootstrap_based_metrics,
         raxmlng_command = raxmlng_command
     script:
         "scripts/compute_and_collect_tree_metrics.py"

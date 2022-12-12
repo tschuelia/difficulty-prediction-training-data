@@ -29,6 +29,10 @@ software:
     command: path/to/iqtree # http://www.iqtree.org
     threads: 2
 
+# Specify whether to run the RAxML-NG bootstrapping and get tree metrics based on the support values
+# this is only recommended for smaller MSAs (e.g. morphological data)
+bootstrap_based_metrics: True
+
 _debug:
   _num_pars_trees: 50
   _num_rand_trees: 50

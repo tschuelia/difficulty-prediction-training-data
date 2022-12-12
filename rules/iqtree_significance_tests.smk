@@ -17,8 +17,6 @@ rule iqtree_significance_tests_on_eval_trees:
         model       = lambda wildcards: iqtree_models[wildcards.msa],
         model_str   = "-p" if partitioned else "-m",
         threads     = config["software"]["iqtree"]["threads"]
-    log:
-        output_files_iqtree_dir / "significance.iqtree.snakelog",
     run:
         morph = "-st MORPH " if params.data_type == "MORPH" else ""
         shell("{iqtree_command} "
@@ -35,4 +33,5 @@ rule iqtree_significance_tests_on_eval_trees:
         "-nt {params.threads} "
         "-treediff "
         "-seed 0 "
-        "> {log} ")
+        "-redo "
+        "> {output.iqtree_log} ")

@@ -23,7 +23,7 @@ outdir: results/
 
 software:
   raxml-ng:
-    command: path/to/raxml-ng # https://github.com/tschuelia/raxml-ng
+    command: path/to/raxml-ng # https://github.com/amkozlov/raxml-ng
     threads: 2
   iqtree:
     command: path/to/iqtree # http://www.iqtree.org

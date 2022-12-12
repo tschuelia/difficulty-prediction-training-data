@@ -34,12 +34,8 @@ rule raxmlng_bootstrap:
 
 
 rule compute_and_collect_tree_metrics:
-    # input:
-    #     database    = rules.move_db.output.database,
-    #     bootstraps  = rules.raxmlng_bootstrap.output.bootstraps,
-    #     eval_trees  = rules.collect_eval_trees.output.all_eval_trees,
     input:
-        tree_metrics_input()
+        **tree_metrics_input()
     output:
         raxmlng_tree_data = f"{db_path}raxmlng_tree_data.parquet",
     params:

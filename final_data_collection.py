@@ -19,6 +19,8 @@ if __name__ == "__main__":
     dfs = []
 
     for msa_dir in directory.iterdir():
+        if not msa_dir.is_dir():
+            continue
         dataset_parquet = msa_dir / "training_data.parquet"
         raxmlng_parquet = msa_dir / "raxmlng_tree_data.parquet"
 

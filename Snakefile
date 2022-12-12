@@ -81,15 +81,15 @@ raxmlng_bootstrap_prefix =  output_files_raxmlng_dir / "bootstrap"
 output_files_iqtree_dir = output_files_dir / "iqtree"
 
 # File paths for parsimony trees
-output_files_parsimony_trees = output_files_dir / "parsimony/"
+output_files_parsimony_trees = output_files_dir / "parsimony"
 parsimony_tree_file_name = output_files_parsimony_trees / "seed_{seed}.raxml.startTree"
 parsimony_log_file_name = output_files_parsimony_trees / "seed_{seed}.raxml.log"
 
 
 rule all:
     input:
-        expand(f"{db_path}training_data.parquet", msa=msa_names),
-        expand(f"{db_path}raxmlng_tree_data.parquet", msa=msa_names)
+        expand(db_path / "training_data.parquet", msa=msa_names),
+        expand(db_path / "raxmlng_tree_data.parquet", msa=msa_names)
 
 
 include: "rules/raxmlng_tree_inference.smk"

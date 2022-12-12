@@ -17,7 +17,7 @@ rule raxmlng_bootstrap:
     params:
         msa = lambda wildcards: msas[wildcards.msa],
         model = lambda wildcards: raxmlng_models[wildcards.msa],
-        prefix = raxmlng_bootstrap_prefix,
+        prefix = str(raxmlng_bootstrap_prefix),
         threads = config["software"]["raxml-ng"]["threads"]
     log:
         raxmlng_log = raxmlng_bootstrap_prefix.with_suffix(".log")

@@ -7,7 +7,7 @@ rule raxmlng_pars_tree:
         raxml_starting_tree = raxmlng_tree_inference_prefix_pars.with_suffix(".raxml.startTree"),
         raxml_best_model    = raxmlng_tree_inference_prefix_pars.with_suffix(".raxml.bestModel"),
     params:
-        prefix  = raxmlng_tree_inference_prefix_pars,
+        prefix  = str(raxmlng_tree_inference_prefix_pars),
         msa     = lambda wildcards: msas[wildcards.msa],
         model   = lambda wildcards: raxmlng_models[wildcards.msa],
         threads = config["software"]["raxml-ng"]["threads"]
@@ -33,7 +33,7 @@ rule raxmlng_rand_tree:
         raxml_best_model    = raxmlng_tree_inference_prefix_rand.with_suffix(".raxml.bestModel"),
 
     params:
-        prefix  = raxmlng_tree_inference_prefix_rand,
+        prefix  = str(raxmlng_tree_inference_prefix_rand),
         msa     = lambda wildcards: msas[wildcards.msa],
         model   = lambda wildcards: raxmlng_models[wildcards.msa],
         threads = config["software"]["raxml-ng"]["threads"]

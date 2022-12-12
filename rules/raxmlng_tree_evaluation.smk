@@ -9,7 +9,7 @@ rule reevaluate_raxml_pars_tree:
         best_tree   = raxmlng_tree_eval_prefix_pars.with_suffix(".raxml.bestTree"),
 
     params:
-        prefix  = raxmlng_tree_eval_prefix_pars,
+        prefix  = str(raxmlng_tree_eval_prefix_pars),
         msa     = lambda wildcards: msas[wildcards.msa],
         model   = lambda wildcards: raxmlng_models[wildcards.msa],
         threads = config["software"]["raxml-ng"]["threads"]
@@ -37,7 +37,7 @@ rule reevaluate_raxml_rand_tree:
         log         = raxmlng_tree_eval_prefix_rand.with_suffix(".raxml.log"),
         best_tree   = raxmlng_tree_eval_prefix_rand.with_suffix(".raxml.bestTree"),
     params:
-        prefix  = raxmlng_tree_eval_prefix_rand,
+        prefix  = str(raxmlng_tree_eval_prefix_rand),
         msa     = lambda wildcards: msas[wildcards.msa],
         model   = lambda wildcards: raxmlng_models[wildcards.msa],
         threads = config["software"]["raxml-ng"]["threads"]

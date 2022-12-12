@@ -13,7 +13,7 @@ rule iqtree_significance_tests_on_eval_trees:
     params:
         msa         = lambda wildcards: msas[wildcards.msa],
         data_type   = lambda wildcards: data_types[wildcards.msa],
-        prefix      = f"{output_files_iqtree_dir}significance",
+        prefix      = str(output_files_iqtree_dir / "significance"),
         model       = lambda wildcards: iqtree_models[wildcards.msa],
         model_str   = "-p" if partitioned else "-m",
         threads     = config["software"]["iqtree"]["threads"]
@@ -35,4 +35,4 @@ rule iqtree_significance_tests_on_eval_trees:
         "-nt {params.threads} "
         "-treediff "
         "-seed 0 "
-        "> {output.iqtree_log} ")
+        "> {log} ")

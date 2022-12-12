@@ -47,6 +47,6 @@ Careful, the training data does not only contain all features we used during our
 The file `features.py` contains further explanation of the features and lists of features and respective labels that can be used for experimenting with the training data.
 
 
-## Preprint Publication
-The paper explaining the details of Pythia is available as preprint on BioRxiv:   
-Haag, J., Höhler, D., Bettisworth, B., & Stamatakis, A. (2022). **From Easy to Hopeless - Predicting the Difficulty of Phylogenetic Analyses.** BioRxiv. [https://doi.org/10.1101/2022.06.20.496790](https://doi.org/10.1101/2022.06.20.496790)
+## Publication
+The paper explaining the details of Pythia is published in MBE:    
+Haag, J., Höhler, D., Bettisworth, B., & Stamatakis, A. (2022). **From Easy to Hopeless - Predicting the Difficulty of Phylogenetic Analyses.** *Molecular Biology and Evolution*, 39(12). [https://doi.org/10.1093/molbev/msac254](https://doi.org/10.1093/molbev/msac254)

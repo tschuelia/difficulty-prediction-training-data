@@ -2,8 +2,6 @@ name: difficulty
 channels:
   - bioconda
   - conda-forge
-  - defaults
-  - conda-canary
 dependencies:
   - snakemake
   - ca-certificates
@@ -13,5 +11,7 @@ dependencies:
   - peewee
   - biopython
   - treelite
+  - pyarrow
   - pip
+  - pip:
     - git+https://github.com/tschuelia/PyPythia.git

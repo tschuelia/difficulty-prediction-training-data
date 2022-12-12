@@ -8,7 +8,7 @@ rule collect_search_trees:
     output:
         all_search_trees = raxmlng_tree_inference_dir / "AllSearchTrees.trees"
     shell:
-        "cat {input.raxmlng_pars_search_trees"} {input.raxmlng_rand_search_trees} > {output.all_search_trees}"
+        "cat {input.raxmlng_pars_search_trees} {input.raxmlng_rand_search_trees} > {output.all_search_trees}"
 
 
 rule collect_search_logs:

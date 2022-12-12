@@ -5,12 +5,12 @@ rule raxmlng_rfdistance_search_trees:
     input:
         all_search_trees = rules.collect_search_trees.output.all_search_trees
     output:
-        rfDist      = f"{raxmlng_tree_inference_dir}inference.raxml.rfDistances",
-        rfDist_log  = f"{raxmlng_tree_inference_dir}inference.raxml.rfDistances.log",
+        rfDist      = raxmlng_tree_inference_dir / "inference.raxml.rfDistances",
+        rfDist_log  = raxmlng_tree_inference_dir / "inference.raxml.rfDistances.log",
     params:
-        prefix = f"{raxmlng_tree_inference_dir}inference"
+        prefix = raxmlng_tree_inference_dir / "inference"
     log:
-        f"{raxmlng_tree_inference_dir}inference.raxml.rfDistances.snakelog",
+        raxmlng_tree_inference_dir / "inference.raxml.rfDistances.snakelog",
     shell:
         "{raxmlng_command} "
         "--rfdist "
@@ -26,12 +26,12 @@ rule raxmlng_rfdistance_eval_trees:
     input:
         all_eval_trees = rules.collect_eval_trees.output.all_eval_trees
     output:
-        rfDist      = f"{raxmlng_tree_eval_dir}eval.raxml.rfDistances",
-        rfDist_log  = f"{raxmlng_tree_eval_dir}eval.raxml.rfDistances.log",
+        rfDist      = raxmlng_tree_eval_dir / "eval.raxml.rfDistances",
+        rfDist_log  = raxmlng_tree_eval_dir / "eval.raxml.rfDistances.log",
     params:
-        prefix = f"{raxmlng_tree_eval_dir}eval"
+        prefix = raxmlng_tree_eval_dir / "eval"
     log:
-        f"{raxmlng_tree_eval_dir}eval.raxml.rfDistances.snakelog",
+        raxmlng_tree_eval_dir / "eval.raxml.rfDistances.snakelog",
     shell:
         "{raxmlng_command} "
         "--rfdist "
@@ -47,12 +47,12 @@ rule raxmlng_rfdistance_plausible_trees:
     input:
         all_plausible_trees = rules.collect_plausible_trees.output.all_plausible_trees
     output:
-        rfDist      = f"{raxmlng_tree_eval_dir}plausible.raxml.rfDistances",
-        rfDist_log  = f"{raxmlng_tree_eval_dir}plausible.raxml.rfDistances.log",
+        rfDist      = raxmlng_tree_eval_dir / "plausible.raxml.rfDistances",
+        rfDist_log  = raxmlng_tree_eval_dir / "plausible.raxml.rfDistances.log",
     params:
-        prefix = f"{raxmlng_tree_eval_dir}plausible"
+        prefix = raxmlng_tree_eval_dir / "plausible"
     log:
-        f"{raxmlng_tree_eval_dir}plausible.raxml.rfDistances.snakelog",
+        raxmlng_tree_eval_dir / "plausible.raxml.rfDistances.snakelog",
     run:
         num_plausible = len(open(input.all_plausible_trees).readlines())
         # we need this distinction because RAxML-NG requires more than one tree in the input file
@@ -78,14 +78,14 @@ rule raxmlng_rfdistance_parsimony_trees:
     Rule that computes the RF-Distances between all parsimony trees inferred with Parsimonator using RAxML-NG.
     """
     input:
-        all_parsimony_trees = f"{output_files_parsimony_trees}AllParsimonyTrees.trees",
+        all_parsimony_trees = output_files_parsimony_trees / "AllParsimonyTrees.trees",
     output:
-        rfDist      = f"{output_files_parsimony_trees}parsimony.raxml.rfDistances",
-        rfDist_log  = f"{output_files_parsimony_trees}parsimony.raxml.rfDistances.log",
+        rfDist      = output_files_parsimony_trees / "parsimony.raxml.rfDistances",
+        rfDist_log  = output_files_parsimony_trees / "parsimony.raxml.rfDistances.log",
     params:
-        prefix = f"{output_files_parsimony_trees}parsimony"
+        prefix = output_files_parsimony_trees / "parsimony"
     log:
-        f"{output_files_parsimony_trees}parsimony.raxml.rfDistances.snakelog",
+        output_files_parsimony_trees / "parsimony.raxml.rfDistances.snakelog",
     shell:
         "{raxmlng_command} "
         "--rfdist "

@@ -12,15 +12,15 @@ def tree_metrics_input():
 
 rule raxmlng_bootstrap:
     output:
-        bootstraps = f"{raxmlng_bootstrap_prefix}.raxml.bootstraps",
-        bootstrap_log = f"{raxmlng_bootstrap_prefix}.raxml.log"
+        bootstraps = raxmlng_bootstrap_prefix.with_suffix(".raxml.bootstraps"),
+        bootstrap_log = raxmlng_bootstrap_prefix.with_suffix(".raxml.log")
     params:
         msa = lambda wildcards: msas[wildcards.msa],
         model = lambda wildcards: raxmlng_models[wildcards.msa],
         prefix = raxmlng_bootstrap_prefix,
         threads = config["software"]["raxml-ng"]["threads"]
     log:
-        raxmlng_log = f"{raxmlng_bootstrap_prefix}.log"
+        raxmlng_log = raxmlng_bootstrap_prefix.with_suffix(".log")
     shell:
         "{raxmlng_command} " +
         " --bootstrap " +
@@ -37,7 +37,7 @@ rule compute_and_collect_tree_metrics:
     input:
         **tree_metrics_input()
     output:
-        raxmlng_tree_data = f"{db_path}raxmlng_tree_data.parquet",
+        raxmlng_tree_data = db_path / "raxmlng_tree_data.parquet",
     params:
         bootstrap_based_metrics = config["bootstrap_based_metrics"],
         raxmlng_command = raxmlng_command

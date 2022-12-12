@@ -8,8 +8,8 @@ rule iqtree_significance_tests_on_eval_trees:
         all_eval_trees  = rules.collect_eval_trees.output.all_eval_trees,
         best_tree       = rules.save_best_eval_tree.output.best_eval_tree
     output:
-        summary     = f"{output_files_iqtree_dir}significance.iqtree",
-        iqtree_log  = f"{output_files_iqtree_dir}significance.iqtree.log",
+        summary     = output_files_iqtree_dir / "significance.iqtree",
+        iqtree_log  = output_files_iqtree_dir / "significance.iqtree.log",
     params:
         msa         = lambda wildcards: msas[wildcards.msa],
         data_type   = lambda wildcards: data_types[wildcards.msa],
@@ -18,7 +18,7 @@ rule iqtree_significance_tests_on_eval_trees:
         model_str   = "-p" if partitioned else "-m",
         threads     = config["software"]["iqtree"]["threads"]
     log:
-        f"{output_files_iqtree_dir}significance.iqtree.snakelog",
+        output_files_iqtree_dir / "significance.iqtree.snakelog",
     run:
         morph = "-st MORPH " if params.data_type == "MORPH" else ""
         shell("{iqtree_command} "

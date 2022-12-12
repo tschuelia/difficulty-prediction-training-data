@@ -4,7 +4,7 @@ rule parsimony_tree:
         log             = parsimony_log_file_name,
     params:
         msa     = lambda wildcards: msas[wildcards.msa],
-        prefix  = output_files_parsimony_trees + "seed_{seed}",
+        prefix  = output_files_parsimony_trees / "seed_{seed}",
         model   = lambda wildcards: raxmlng_models[wildcards.msa]
 
     run:

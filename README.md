@@ -9,15 +9,15 @@ This pipeline is used to generate the training data for [Pythia](https://github.
     conda env create -f environment.yml
     ```
 2. Install RAxML-NG.
-   Note that you need my version of RAxML-NG, as this version contains additional features required for this pipeline.
    ```
-   git clone --recursive https://github.com/tschuelia/raxml-ng.git
+   git clone --recursive https://github.com/amkozlov/raxml-ng.git
    cd raxml-ng
    mkdir build && cd build
    cmake ..
    make -j
    ```
 3. Install IQ-Tree by following the instructions on [their website](http://www.iqtree.org).
+4. Install the required R-Package RPANDAS by running `python install_rpanda.py`
 
 ### Running the pipeline
 1. Configure the pipeline by changing the `config.yaml` file:
@@ -34,13 +34,21 @@ If you intend to run snakemake on a slurm cluster, you might want to check out [
 
 
 ### Output
-In the output directory you will find a subdirectory for each MSA you provided as input. Each subdirectory contains a `data.sqlite3` SQLite database and a Parquet file.
+In the output directory you will find a subdirectory for each MSA you provided as input. Each subdirectory contains a `data.sqlite3` SQLite database and two parquet files:
+- `training_data.parquet` contains MSA attributes and the ground-truth difficulty label
+- `raxmlng_tree_data.parquet` contains tree characteristics and the results of the statistical tests for all inferred trees. There is also a column labeled `is_best` that indicates whether this tree is the best found ML tree.
 
 The subdirectory `output_files` contains the intermediate files and logs of all snakemake steps. 
 
+#### Collecting the MSA and tree characteristics of the best tree
+Instead of including this step in the snakemake pipeline, I provide an extra script for collecting the MSA attributes and tree characteristics for all results in a given directory.
+The reason for this is that snakemake will not execute this final step in case of an error during the pipeline execution of a single MSA and some datasets fail with RAxML-NG or IQ-Tree for no apparent reason...
+
+You can execute this final data collection by calling: `python final_data_collection.py --dir [directory]`. Pass the directory you specified in the `outdir` variable in the `config.yaml` file.
+
 
 ### Training Data
-This repository also contains the training data as parquet file. To open the file, you need `pyarrow` or `fastparquet` installed in your environment. 
+This repository also contains the current set training data as parquet file. To open the file, you need `pyarrow` or `fastparquet` installed in your environment. 
 Then you can open the file with pandas using `pd.read_parquet("training_data.parquet")`.
 
 Careful, the training data does not only contain all features we used during our prediction experiments, but also the features we used to quantify the difficulty. 

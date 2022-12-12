@@ -13,5 +13,9 @@ dependencies:
   - peewee
   - biopython
   - treelite
-  - pip
+  - git-lfs
+  - rpy2
+  - r-raster
+  - r-rmpfr
+  - pip:
     - git+https://github.com/tschuelia/PyPythia.git

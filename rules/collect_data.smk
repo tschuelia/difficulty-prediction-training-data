@@ -6,7 +6,7 @@ rule collect_search_trees:
         raxmlng_pars_search_trees = expand(raxmlng_tree_inference_prefix_pars + ".raxml.bestTree", seed=pars_seeds, allow_missing=True),
         raxmlng_rand_search_trees = expand(raxmlng_tree_inference_prefix_rand + ".raxml.bestTree", seed=rand_seeds, allow_missing=True)
     output:
-        all_search_trees = f"{raxmlng_tree_inference_dir}AllSearchTrees.trees"
+        all_search_trees = raxmlng_tree_inference_dir / "AllSearchTrees.trees"
     shell:
         "cat {input.raxmlng_pars_search_trees} {input.raxmlng_rand_search_trees} > {output.all_search_trees}"
 
@@ -19,7 +19,7 @@ rule collect_search_logs:
         raxmlng_pars_search_logs = expand(raxmlng_tree_inference_prefix_pars + ".raxml.inference.log", seed=pars_seeds, allow_missing=True),
         raxmlng_rand_search_logs = expand(raxmlng_tree_inference_prefix_rand + ".raxml.inference.log", seed=rand_seeds, allow_missing=True)
     output:
-        all_search_logs = f"{raxmlng_tree_inference_dir}AllSearchLogs.log"
+        all_search_logs = raxmlng_tree_inference_dir / "AllSearchLogs.log"
     shell:
         "cat {input.raxmlng_pars_search_logs} {input.raxmlng_rand_search_logs} > {output.all_search_logs}"
 

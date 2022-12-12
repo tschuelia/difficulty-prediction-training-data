@@ -1,5 +1,6 @@
 import os
 import sys
+import pathlib
 
 sys.path.append("rules/scripts")
 from pypythia.msa import MSA
@@ -59,30 +60,30 @@ else:
 
 
 
-outdir = config["outdir"]
-db_path = outdir + "{msa}/"
-output_files_dir = outdir + "{msa}/output_files/"
+outdir = pathlib.Path(config["outdir"])
+db_path = outdir / "{msa}/"
+output_files_dir = outdir / "{msa}" / "output_files"
 
 # File paths for RAxML-NG files
-output_files_raxmlng_dir = output_files_dir + "raxmlng/"
+output_files_raxmlng_dir = output_files_dir / "raxmlng"
 # tree inference
-raxmlng_tree_inference_dir = output_files_raxmlng_dir + "inference/"
-raxmlng_tree_inference_prefix_pars = raxmlng_tree_inference_dir + "pars_{seed}"
-raxmlng_tree_inference_prefix_rand = raxmlng_tree_inference_dir + "rand_{seed}"
+raxmlng_tree_inference_dir = output_files_raxmlng_dir / "inference"
+raxmlng_tree_inference_prefix_pars = raxmlng_tree_inference_dir / "pars_{seed}"
+raxmlng_tree_inference_prefix_rand = raxmlng_tree_inference_dir / "rand_{seed}"
 # tree evaluation
-raxmlng_tree_eval_dir = output_files_raxmlng_dir + "evaluation/"
-raxmlng_tree_eval_prefix_pars = raxmlng_tree_eval_dir + "pars_{seed}"
-raxmlng_tree_eval_prefix_rand = raxmlng_tree_eval_dir + "rand_{seed}"
+raxmlng_tree_eval_dir = output_files_raxmlng_dir / "evaluation"
+raxmlng_tree_eval_prefix_pars = raxmlng_tree_eval_dir / "pars_{seed}"
+raxmlng_tree_eval_prefix_rand = raxmlng_tree_eval_dir / "rand_{seed}"
 # bootstrapping
-raxmlng_bootstrap_prefix =  output_files_raxmlng_dir + "bootstrap/"
+raxmlng_bootstrap_prefix =  output_files_raxmlng_dir / "bootstrap"
 
 # File paths for IQ-Tree files
-output_files_iqtree_dir = output_files_dir + "iqtree/"
+output_files_iqtree_dir = output_files_dir / "iqtree"
 
 # File paths for parsimony trees
-output_files_parsimony_trees = output_files_dir + "parsimony/"
-parsimony_tree_file_name = output_files_parsimony_trees + "seed_{seed}.raxml.startTree"
-parsimony_log_file_name = output_files_parsimony_trees + "seed_{seed}.raxml.log"
+output_files_parsimony_trees = output_files_dir / "parsimony/"
+parsimony_tree_file_name = output_files_parsimony_trees / "seed_{seed}.raxml.startTree"
+parsimony_log_file_name = output_files_parsimony_trees / "seed_{seed}.raxml.log"
 
 
 rule all:

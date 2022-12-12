@@ -70,7 +70,7 @@ rule collect_plausible_trees:
     Rule that collects all plausible trees for one dataset in one file.
     """
     input:
-        iqtree_results = rules.iqtree_significance_tests_on_eval_trees.output.summary,
+        iqtree_results = output_files_iqtree_dir / "significance.iqtree",
         eval_trees = rules.collect_eval_trees.output.all_eval_trees
     output:
         all_plausible_trees = raxmlng_tree_eval_dir / "AllPlausibleTrees.trees",

@@ -37,8 +37,8 @@ if __name__ == "__main__":
 
         assert rax_df.shape[0] >= 1, f"The data for MSA {msa_dir} does not seem to contain a best_tree, please check the RAxML-NG logs..."
 
-        rax_df = rax_df.drop(["id", "uuid", "dataset_id", "dataset_uuid"], axis=1)
-        rax_df = rax_df.head(1)
+        rax_df = rax_df.head(1).reset_index()
+        rax_df = rax_df.drop(["id", "uuid", "dataset_id", "dataset_uuid", "index"], axis=1)
 
         df = pd.concat([df, rax_df], axis=1)
         dfs.append(df)

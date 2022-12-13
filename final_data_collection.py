@@ -26,6 +26,7 @@ if __name__ == "__main__":
 
         if not dataset_parquet.exists() or not raxmlng_parquet.exists():
             print(f"Skipping {msa_dir}: not all parquet files present.")
+            continue
 
         df = pd.read_parquet(dataset_parquet)
 

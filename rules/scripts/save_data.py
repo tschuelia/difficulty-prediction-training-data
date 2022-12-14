@@ -12,8 +12,6 @@ from raxmlng_parser import (
     get_raxmlng_num_spr_rounds,
     rel_rfdistance_starting_final,
     get_model_parameter_estimates,
-    get_all_parsimony_scores,
-    get_raxmlng_runtimes
 )
 
 from pypythia.raxmlng_parser import get_raxmlng_rfdist_results
@@ -65,9 +63,6 @@ parsimony_rfdistance = snakemake.input.parsimony_rfdistance
 
 llhs_search = get_all_raxmlng_llhs(search_logs_collected)
 llhs_eval = get_all_raxmlng_llhs(eval_logs_collected)
-
-parsimony_scores = get_all_parsimony_scores(parsimony_logs)
-parsimony_runtimes = get_raxmlng_runtimes(parsimony_logs)
 
 num_searches = len(pars_search_trees) + len(rand_search_trees)
 data_type = MSA(snakemake.params.msa).data_type
@@ -143,8 +138,6 @@ dataset_dbobj = Dataset.create(
     # Parsimony Trees Features
     avg_rfdist_parsimony    = avg_rfdist_parsimony,
     num_topos_parsimony     = num_topos_parsimony,
-    mean_parsimony_score    = np.mean(parsimony_scores),
-    std_parsimony_score     = np.std(parsimony_scores),
 )
 
 
@@ -214,14 +207,11 @@ dataset_dbobj.update(
 parsimony_trees = open(parsimony_trees).readlines()
 parsimony_trees = [tree.strip() for tree in parsimony_trees if tree]
 
-assert len(parsimony_trees) == len(parsimony_scores)
 
-for (score, runtime, tree) in zip(parsimony_scores, parsimony_runtimes, parsimony_trees):
+for tree in parsimony_trees:
     ParsimonyTree.create(
         uuid            = uuid.uuid4(),
         dataset         = dataset_dbobj,
         dataset_uuid    = dataset_dbobj.uuid,
-        newick_tree     = tree,
-        parsimony_score = score,
-        compute_time    = runtime
+        newick_tree     = tree
     )

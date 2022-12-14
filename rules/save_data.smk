@@ -1,6 +1,6 @@
 rule save_data:
     input:
-        # Tree seach tree files and logs
+        # Tree search tree files and logs
         pars_search_trees   = expand(raxmlng_tree_inference_prefix_pars.with_suffix(".raxml.bestTree"), seed=pars_seeds, allow_missing=True),
         pars_starting_trees = expand(raxmlng_tree_inference_prefix_pars.with_suffix(".raxml.startTree"), seed=pars_seeds, allow_missing=True),
         pars_search_logs    = expand(raxmlng_tree_inference_prefix_pars.with_suffix(".raxml.inference.log"), seed=pars_seeds, allow_missing=True),
@@ -33,9 +33,9 @@ rule save_data:
         msa_features = output_files_dir / "msa_features.json",
 
         # Parsimony Trees and logs
-        parsimony_trees = output_files_parsimony_trees / "AllParsimonyTrees.trees",
-        parsimony_logs = output_files_parsimony_trees / "AllParsimonyLogs.log",
-        parsimony_rfdistance = output_files_parsimony_trees / "parsimony.raxml.rfDistances.log",
+        parsimony_trees = output_files_parsimony_trees / "parsimony.raxml.startTree",
+        parsimony_logs = output_files_parsimony_trees / "parsimony.raxml.log",
+        parsimony_rfdistance = output_files_parsimony_trees / "parsimonyRF.raxml.rfDistances.log",
     output:
         database = "{msa}_data.sqlite3"
     params:

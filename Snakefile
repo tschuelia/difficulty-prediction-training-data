@@ -82,8 +82,6 @@ output_files_iqtree_dir = output_files_dir / "iqtree"
 
 # File paths for parsimony trees
 output_files_parsimony_trees = output_files_dir / "parsimony"
-parsimony_tree_file_name = output_files_parsimony_trees / "seed_{seed}.raxml.startTree"
-parsimony_log_file_name = output_files_parsimony_trees / "seed_{seed}.raxml.log"
 
 
 rule all:

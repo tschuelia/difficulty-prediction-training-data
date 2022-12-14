@@ -56,8 +56,6 @@ class Dataset(P.Model):
     # Parsimony Trees Features
     avg_rfdist_parsimony = P.FloatField(null=True)
     num_topos_parsimony = P.IntegerField(null=True)
-    mean_parsimony_score = P.FloatField(null=True)
-    std_parsimony_score = P.FloatField(null=True)
 
     class Meta:
         database = db
@@ -103,8 +101,6 @@ class ParsimonyTree(P.Model):
     dataset = P.ForeignKeyField(Dataset)
     dataset_uuid = P.UUIDField()
     newick_tree = P.TextField(null=True)
-    parsimony_score = P.FloatField(null=True)
-    compute_time = P.FloatField(null=True)
 
     class Meta:
         database = db

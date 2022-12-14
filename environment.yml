@@ -9,15 +9,17 @@ dependencies:
   - openssl
   - pandas
   - peewee
+  - pyarrow
   - biopython
+  - ete3
   - treelite
   - git-lfs
   - rpy2
   - r-devtools
   - r-essentials
+  - r-raster
+  - r-rmpfr
   - regex
-  - pyarrow
-  - ete3
   - pip
   - pip:
     - git+https://github.com/tschuelia/PyPythia.git

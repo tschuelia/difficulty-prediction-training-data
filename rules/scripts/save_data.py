@@ -53,6 +53,10 @@ plausible_rfdistance = snakemake.input.plausible_rfdistance
 plausible_trees_collected = read_file_contents(snakemake.input.plausible_trees_collected)
 iqtree_results = get_iqtree_results(snakemake.input.iqtree_results)
 
+n_eval_trees = len(pars_eval_trees) + len(rand_eval_trees)
+n_iqtree_res = len(iqtree_results)
+assert n_iqtree_res == n_eval_trees, f"{dataset_name}: number of IQ-Tree results ({n_iqtree_res}) does not match number of trees {n_eval_trees}"
+
 # msa features
 with open(snakemake.input.msa_features) as f:
     msa_features = json.load(f)

@@ -13,6 +13,7 @@ from raxmlng_parser import (
     rel_rfdistance_starting_final,
     get_model_parameter_estimates,
 )
+from utils import read_file_contents
 
 from pypythia.raxmlng_parser import get_raxmlng_rfdist_results
 from pypythia.msa import MSA
@@ -49,7 +50,7 @@ best_eval_tree = open(snakemake.input.best_eval_tree).readline().strip()
 
 # plausible
 plausible_rfdistance = snakemake.input.plausible_rfdistance
-plausible_trees_collected = snakemake.input.plausible_trees_collected
+plausible_trees_collected = read_file_contents(snakemake.input.plausible_trees_collected)
 iqtree_results = get_iqtree_results(snakemake.input.iqtree_results)
 
 # msa features
@@ -198,8 +199,8 @@ dataset_dbobj.update(
     {
         "mean_llh_plausible": np.mean(plausible_llhs),
         "std_llh_plausible": np.std(plausible_llhs),
-        "num_trees_plausible": len(plausible_llhs),
-        "proportion_plausible": len(plausible_llhs) / num_searches,
+        "num_trees_plausible": len(plausible_trees_collected),
+        "proportion_plausible": len(plausible_trees_collected) / num_searches,
     }
 ).execute()
 

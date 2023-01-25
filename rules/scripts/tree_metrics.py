@@ -66,7 +66,7 @@ def spectral_analysis(newick_tree):
         spectral = {key: spectral.rx2(key)[0] for key in spectral.names}
         return spectral
     except:
-        return None
+        return {}
 
 
 def tree_diameter(newick_tree):
@@ -85,13 +85,19 @@ def get_tree_characteristics(newick_tree):
     internal_brlens, external_brlens = get_internal_external_brlens(newick_tree)
     brlen_stats = compute_brlen_statistics(internal_brlens, external_brlens)
 
+    spectral = spectral_analysis(newick_tree)
+
     data = {
         "internal_brlens": [internal_brlens],
         "external_brlens": [external_brlens],
         **brlen_stats,
         "near_zero_percentage_internal": get_percentage_near_zero_brlens(internal_brlens),
         "near_zero_percentage_external": get_percentage_near_zero_brlens(external_brlens),
-        **spectral_analysis(newick_tree),
+        "eigenvalues": spectral.get("eigenvalues", None),
+        "principal_eigenvalue": spectral.get("principal_eigenvalue", None),
+        "asymmetry": spectral.get("asymmetry", None),
+        "peakedness": spectral.get("peakedness", None),
+        "eigengap": spectral.get("eigengap", None),
         "diameter": tree_diameter(newick_tree)
     }
 
